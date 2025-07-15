@@ -1,0 +1,140 @@
+[
+	{
+		"key": "ctrl+shift+g",
+		"command": "editor.action.rename",
+		"when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "f2",
+		"command": "-editor.action.rename",
+		"when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "alt+cmd+p",
+		"command": "projectManager.listProjects"
+	},
+	{
+		"key": "shift+tab",
+		"command": "workbench.action.previousEditorInGroup"
+	},
+	{
+		"key": "shift+tab",
+		"command": "workbench.action.previousEditor"
+	},
+	{
+		"key": "ctrl+n",
+		"command": "cursorDown",
+		"when": "editorTextFocus"
+	},
+	{
+		"key": "ctrl+p",
+		"command": "cursorUp",
+		"when": "editorTextFocus"
+	},
+	{
+		"key": "shift+k",
+		"command": "editor.action.moveLinesUpAction",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "shift+j",
+		"command": "editor.action.moveLinesDownAction",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "cmd+i",
+		"command": "composerMode.agent"
+	},
+	// Disable space key in sidebar to prevent folder expansion and file selection
+	{
+		"command": "whichkey.show",
+		"key": "space",
+		"when": "listFocus && !inputFocus"
+	},
+	// Neovim-style sidebar navigation
+	{
+		"key": "j",
+		"command": "list.focusDown",
+		"when": "listFocus && !inputFocus"
+	},
+	{
+		"key": "k",
+		"command": "list.focusUp",
+		"when": "listFocus && !inputFocus"
+	},
+	{
+		"key": "h",
+		"command": "list.collapse",
+		"when": "listFocus && !inputFocus"
+	},
+	{
+		"key": "l",
+		"command": "list.expand",
+		"when": "listFocus && !inputFocus"
+	},
+	{
+		"key": "enter",
+		"command": "list.select",
+		"when": "listFocus && !inputFocus"
+	},
+	{
+		"key": "a",
+		"command": "explorer.newFile",
+		"when": "explorerViewletFocus && !inputFocus"
+	},
+	{
+		"key": "shift+a",
+		"command": "explorer.newFolder",
+		"when": "explorerViewletFocus && !inputFocus"
+	},
+	{
+		"key": "r",
+		"command": "renameFile",
+		"when": "explorerViewletFocus && !inputFocus"
+	},
+	{
+		"key": "d",
+		"command": "deleteFile",
+		"when": "explorerViewletFocus && !inputFocus"
+	},
+	{
+		"key": "c",
+		"command": "filesExplorer.copy",
+		"when": "explorerViewletFocus && !inputFocus"
+	},
+	{
+		"key": "v",
+		"command": "filesExplorer.paste",
+		"when": "explorerViewletFocus && !inputFocus"
+	},
+	{
+		"key": "y",
+		"command": "filesExplorer.copy",
+		"when": "explorerViewletFocus && !inputFocus"
+	},
+	{
+		"key": "p",
+		"command": "filesExplorer.paste",
+		"when": "explorerViewletFocus && !inputFocus"
+	},
+	{
+		"key": "shift+k",
+		"command": "list.focusUp",
+		"when": "listFocus && !inputFocus"
+	},
+	{
+		"key": "shift+j",
+		"command": "list.focusDown",
+		"when": "listFocus && !inputFocus"
+	},
+	{
+		"key": "shift+h",
+		"command": "list.collapse",
+		"when": "listFocus && !inputFocus"
+	},
+	{
+		"key": "shift+l",
+		"command": "list.expand",
+		"when": "listFocus && !inputFocus"
+	}
+]
