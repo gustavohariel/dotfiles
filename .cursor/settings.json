@@ -71,7 +71,6 @@
 	"workbench.preferredDarkColorTheme": "poimandres",
 	"workbench.iconTheme": "symbols",
 	"workbench.sideBar.location": "right",
-	"workbench.activityBar.location": "hidden",
 	"workbench.editor.labelFormat": "short",
 	"workbench.editor.empty.hint": "hidden",
 	"workbench.panel.opensMaximized": "always",
@@ -103,8 +102,8 @@
 	// CUSTOM UI STYLING
 	// ========================================
 	"custom-ui-style.electron": {
-		"transparent": true,
-		"opacity": 0.95,
+		// "transparent": true,
+		// "opacity": 0.95,
 		"backgroundColor": "#00000000",
 		"frame": false,
 		"vibrancy": "ultra-dark",
@@ -123,7 +122,35 @@
 			"background-color": "#1b1e28 !important",
 			"border-radius": "10px !important",
 			"border": "1px solid #5CE2C3 !important"
-		}
+		},
+		".quick-input-widget .quick-input-header": "padding:0px!important;margin-bottom:10px;",
+		".quick-input-widget .monaco-inputbox": {
+			"padding": "10px !important",
+			"border-radius": "5px!important"
+		},
+		".quick-input-widget .monaco-list-rows": "top: 0 !important;max-height:670px;min-height:300px;",
+		".quick-input-widget .monaco-list-row": "position:static!important;border-bottom: 1px solid #333942;padding:5px!important;height:auto!important;",
+		".quick-input-widget .quick-input-list-entry": "position:relative;padding:0 5px 0px 15px;",
+		".quick-input-widget .quick-input-list-entry .codicon[class*=codicon-]": "font-size:12px;",
+		".quick-input-widget .quick-input-list .quick-input-list-entry.quick-input-list-separator-border": "border-top-width:0px!important;",
+		".monaco-editor .cursor": "background: linear-gradient(to bottom, #5CE2C3, #5CE2C3) !important;  color: #5CE2C3 !important",
+		".title-actions": "display: none !important",
+		".quick-input-widget.show-file-icons, .editor-widget.find-widget": "box-shadow: none !important",
+		".filematch .monaco-icon-label:before, .custom-list-row.results .monaco-list-row .monaco-icon-label:before": "background-position: 0 bottom !important",
+		".filematch .monaco-count-badge": "padding: 5px 6px 0 6px !important",
+		".sidebar .title-label": "padding: 0 !important",
+		".monaco-workbench .monaco-list:not(.element-focused):focus:before": "outline: none !important",
+		".sidebar": "border: none !important",
+		".quick-input-list-row div": "display: flex !important; align-items: center !important",
+		".panel .composite.title": "visibility: hidden !important",
+		".title.show-file-icons .label-container .monaco-icon-label.file-icon": "padding-bottom: 6px !important",
+		".sidebar .title-label h2": "line-height: 2.8 !important",
+		".monaco-editor .scroll-decoration": "display: none !important",
+		".monaco-scrollable-element > .shadow.top": "display: none !important",
+		".editor-group-watermark": {
+			"font-size": "15px !important"
+		},
+		"customCSS.content": ".monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab { display: none !important; } .monaco-workbench .part.editor > .content .editor-group-container > .editor-group-watermark { display: none; } .monaco-workbench .part.editor > .content .editor-group-container > .editor-group-watermark + div::before { content: \"**  **                _                     \\A|  \\\\/  |              (_)                    \\A| \\\\  / | ** *****  *** ___ * ***_**  *   * __ \\A| |\\\\/| |/ ` |/ _/ __| | '_ ` *  | | | / *_|\\A| |  | | (_| | (__\\\\__ \\\\ | | | | | | |_| \\\\__ \\\\ \\A|_|  |_|\\\\__,_|\\\\___|___/_|_| |_| |_|\\\\__,_|___/\\A                     By sansyrox a.k.a TLS(The Leader Supreme)\"; white-space: pre; font-family: monospace; font-size: 12px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }"
 	},
 	"custom-ui-style.font.monospace": "JetBrains Mono",
 	"custom-ui-style.font.sansSerif": "JetBrains Mono",
@@ -250,7 +277,499 @@
 	// EXTENSIONS & FEATURES
 	// ========================================
 	"cursor.cpp.enablePartialAccepts": true,
-	"vim.useSystemClipboard": true
+
+	// ========================================
+	// VIM
+	// ========================================
+	"vim.useSystemClipboard": true,
+	"vim.commandLineModeKeyBindings": [
+		{
+			"before": [":"],
+			"commands": ["extension.GoToAnything"],
+			"silent": false
+		}
+	],
+	"vim.sneak": true,
+	"vim.easymotion": true,
+	"vim.leader": "space",
+	"vim.normalModeKeyBindingsNonRecursive": [
+		{
+			"before": ["<space>"],
+			"commands": ["whichkey.show"]
+		},
+		{
+			"before": ["x"],
+			"after": ["\"", "_", "x"]
+		},
+		{
+			"before": ["d"],
+			"after": ["\"", "_", "d"]
+		},
+		{
+			"before": ["c"],
+			"after": ["\"", "_", "c"]
+		},
+		{
+			"before": ["X"],
+			"after": ["\"", "_", "X"]
+		},
+		{
+			"before": ["D"],
+			"after": ["\"", "_", "D"]
+		},
+		{
+			"before": ["C"],
+			"after": ["\"", "_", "C"]
+		}
+	],
+	"vim.visualModeKeyBindingsNonRecursive": [
+		{
+			"before": ["<space>"],
+			"commands": ["whichkey.show"]
+		},
+		{
+			"before": ["P"],
+			"after": ["\"", "_", "d", "P"]
+		},
+		{
+			"before": ["p"],
+			"after": ["\"", "_", "d", "p"]
+		},
+		{
+			"before": ["x"],
+			"after": ["\"", "_", "x"]
+		},
+		{
+			"before": ["d"],
+			"after": ["\"", "_", "d"]
+		},
+		{
+			"before": ["c"],
+			"after": ["\"", "_", "c"]
+		},
+		{
+			"before": ["X"],
+			"after": ["\"", "_", "X"]
+		},
+		{
+			"before": ["D"],
+			"after": ["\"", "_", "D"]
+		},
+		{
+			"before": ["C"],
+			"after": ["\"", "_", "C"]
+		}
+	],
+
+	// ========================================
+	// WhichKey
+	// ========================================
+	"whichkey.bindings": [
+		{
+			"key": "q",
+			"name": "Close Window",
+			"type": "command",
+			"command": "workbench.action.closeActiveEditor"
+		},
+		{
+			"key": "/",
+			"name": "Comment",
+			"type": "command",
+			"command": "editor.action.commentLine"
+		},
+		{
+			"key": "=",
+			"name": "Balance Editor Groups",
+			"type": "command",
+			"command": "workbench.action.evenEditorWidths"
+		},
+		{
+			"key": "e",
+			"name": "Explorer",
+			"type": "command",
+			"command": "workbench.action.toggleSidebarVisibility"
+		},
+		{
+			"key": "h",
+			"name": "Split Editor Below",
+			"type": "command",
+			"command": "workbench.action.splitEditorDown"
+		},
+		{
+			"key": "n",
+			"name": "Clear Search Highlight",
+			"type": "command",
+			"command": "search.action.clearSearchResults"
+		},
+		{
+			"key": "o",
+			"name": "Toggle Sidebar Focus",
+			"type": "command",
+			"command": "workbench.view.explorer"
+		},
+		{
+			"key": "u",
+			"name": "Undo",
+			"type": "command",
+			"command": "undo"
+		},
+		{
+			"key": "v",
+			"name": "Split Editor Right",
+			"type": "command",
+			"command": "workbench.action.splitEditorRight"
+		},
+		{
+			"key": "W",
+			"name": "Switch Editor",
+			"type": "command",
+			"command": "workbench.action.nextEditor"
+		},
+		{
+			"key": "c",
+			"name": "Close Editor",
+			"type": "command",
+			"command": "workbench.action.closeActiveEditor"
+		},
+		{
+			"key": "?",
+			"name": "Search in Files",
+			"type": "command",
+			"command": "workbench.action.findInFiles"
+		},
+		{
+			"key": "a",
+			"name": "Actions",
+			"type": "bindings",
+			"bindings": [
+				{
+					"key": "c",
+					"name": "Toggle Colorizer",
+					"type": "command",
+					"command": "extension.colorize.toggle"
+				},
+				{
+					"key": "e",
+					"name": "Open Explorer",
+					"type": "command",
+					"command": "workbench.view.explorer"
+				},
+				{
+					"key": "h",
+					"name": "Remove Highlight",
+					"type": "command",
+					"command": "search.action.clearSearchResults"
+				},
+				{
+					"key": "l",
+					"name": "Start Live Server",
+					"type": "command",
+					"command": "liveServer.start"
+				},
+				{
+					"key": "L",
+					"name": "Stop Live Server",
+					"type": "command",
+					"command": "liveServer.stop"
+				},
+				{
+					"key": "m",
+					"name": "Markdown Preview",
+					"type": "command",
+					"command": "markdown.showPreview"
+				},
+				{
+					"key": "M",
+					"name": "Close Markdown Preview",
+					"type": "command",
+					"command": "markdown.preview.close"
+				},
+				{
+					"key": "n",
+					"name": "Toggle Line Numbers",
+					"type": "command",
+					"command": "editor.action.toggleRenderLineNumbers"
+				},
+				{
+					"key": "s",
+					"name": "Surround with Quotes",
+					"type": "command",
+					"command": "editor.action.insertSnippet",
+					"args": {
+						"snippet": "\"${TM_SELECTED_TEXT}\""
+					}
+				},
+				{
+					"key": "r",
+					"name": "Toggle Relative Line Numbers",
+					"type": "command",
+					"command": "editor.action.toggleRenderRelativeLineNumbers"
+				},
+				{
+					"key": "t",
+					"name": "Toggle Terminal",
+					"type": "command",
+					"command": "workbench.action.terminal.toggleTerminal"
+				},
+				{
+					"key": "v",
+					"name": "Open REPL",
+					"type": "command",
+					"command": "extension.REPL"
+				},
+				{
+					"key": "V",
+					"name": "Close REPL",
+					"type": "command",
+					"command": "workbench.action.terminal.kill"
+				},
+				{
+					"key": "w",
+					"name": "Trim Trailing Whitespace",
+					"type": "command",
+					"command": "editor.action.trimTrailingWhitespace"
+				}
+			]
+		},
+		// Additional key groups and bindings can be added here.
+		{
+			"key": "b",
+			"name": "Buffer Operations",
+			"type": "bindings",
+			"bindings": [
+				{
+					"key": ">",
+					"name": "Move Editor Right",
+					"type": "command",
+					"command": "workbench.action.moveEditorToNextGroup"
+				},
+				{
+					"key": "<",
+					"name": "Move Editor Left",
+					"type": "command",
+					"command": "workbench.action.moveEditorToPreviousGroup"
+				},
+				{
+					"key": "1",
+					"name": "Focus First Editor Group",
+					"type": "command",
+					"command": "workbench.action.focusFirstEditorGroup"
+				},
+				// Add similar bindings for other numbers
+				{
+					"key": "b",
+					"name": "Pick Editor",
+					"type": "command",
+					"command": "workbench.action.quickOpen"
+				},
+				{
+					"key": "d",
+					"name": "Close Editor",
+					"type": "command",
+					"command": "workbench.action.closeActiveEditor"
+				},
+				{
+					"key": "D",
+					"name": "Order by Directory",
+					"type": "command",
+					"command": "workbench.files.action.sortOrderDirectoriesFirst"
+				},
+				{
+					"key": "f",
+					"name": "First Editor",
+					"type": "command",
+					"command": "workbench.action.firstEditorInGroup"
+				},
+				{
+					"key": "l",
+					"name": "Last Editor",
+					"type": "command",
+					"command": "workbench.action.lastEditorInGroup"
+				},
+				{
+					"key": "n",
+					"name": "Next Editor",
+					"type": "command",
+					"command": "workbench.action.nextEditor"
+				},
+				{
+					"key": "p",
+					"name": "Previous Editor",
+					"type": "command",
+					"command": "workbench.action.previousEditor"
+				},
+				{
+					"key": "?",
+					"name": "Show Editors",
+					"type": "command",
+					"command": "workbench.action.showAllEditors"
+				}
+			]
+		},
+		{
+			"key": "s",
+			"name": "Search",
+			"type": "bindings",
+			"bindings": [
+				{
+					"key": "/",
+					"name": "Search History",
+					"type": "command",
+					"command": "workbench.action.openPreviousEditorFromHistory"
+				},
+				{
+					"key": ";",
+					"name": "Show All Commands",
+					"type": "command",
+					"command": "workbench.action.showCommands"
+				},
+				{
+					"key": "a",
+					"name": "Search Text (Ag)",
+					"type": "command",
+					"command": "workbench.action.findInFiles"
+				},
+				{
+					"key": "b",
+					"name": "Search Current Buffer",
+					"type": "command",
+					"command": "workbench.action.findInActiveEditor"
+				},
+				{
+					"key": "B",
+					"name": "List Open Buffers",
+					"type": "command",
+					"command": "workbench.action.showAllEditors"
+				},
+				{
+					"key": "c",
+					"name": "Search Commits",
+					"type": "command",
+					"command": "gitlens.showQuickCommitFileHistory"
+				},
+				{
+					"key": "C",
+					"name": "Search Buffer Commits",
+					"type": "command",
+					"command": "gitlens.showQuickFileHistory"
+				},
+				{
+					"key": "d",
+					"name": "Directory Files",
+					"type": "command",
+					"command": "workbench.action.quickOpen"
+				},
+				{
+					"key": "f",
+					"name": "Search Files",
+					"type": "command",
+					"command": "workbench.action.quickOpen"
+				},
+				{
+					"key": "g",
+					"name": "Git Files",
+					"type": "command",
+					"command": "gitlens.showQuickRepoStatus"
+				},
+				{
+					"key": "G",
+					"name": "Search Modified Git Files",
+					"type": "command",
+					"command": "gitlens.showQuickRepoHistory"
+				},
+				{
+					"key": "h",
+					"name": "File History",
+					"type": "command",
+					"command": "gitlens.showQuickFileHistory"
+				},
+				{
+					"key": "H",
+					"name": "Command History",
+					"type": "command",
+					"command": "workbench.action.showCommands"
+				},
+				{
+					"key": "l",
+					"name": "Lines",
+					"type": "command",
+					"command": "workbench.action.gotoLine"
+				},
+				{
+					"key": "m",
+					"name": "Marks",
+					"type": "command",
+					"command": "bookmarks.jumpToNext"
+				},
+				{
+					"key": "M",
+					"name": "Maps",
+					"type": "command",
+					"command": "workbench.action.keybindingsReference"
+				},
+				{
+					"key": "p",
+					"name": "Helptags",
+					"type": "command",
+					"command": "workbench.action.showAllSymbols"
+				},
+				{
+					"key": "P",
+					"name": "Project Tags",
+					"type": "command",
+					"command": "workbench.action.showAllSymbols"
+				},
+				{
+					"key": "q",
+					"name": "QuickFix List",
+					"type": "command",
+					"command": "workbench.actions.view.problems"
+				},
+				{
+					"key": "s",
+					"name": "Snippets",
+					"type": "command",
+					"command": "workbench.action.insertSnippet"
+				},
+				{
+					"key": "S",
+					"name": "Color Schemes",
+					"type": "command",
+					"command": "workbench.action.selectTheme"
+				},
+				{
+					"key": "t",
+					"name": "Text Rg",
+					"type": "command",
+					"command": "find-it-faster.findWithinFiles"
+				},
+				{
+					"key": "T",
+					"name": "Buffer Tags",
+					"type": "command",
+					"command": "workbench.action.gotoSymbol"
+				},
+				{
+					"key": "w",
+					"name": "Search Windows",
+					"type": "command",
+					"command": "workbench.action.quickOpen"
+				},
+				{
+					"key": "y",
+					"name": "File Types",
+					"type": "command",
+					"command": "workbench.action.showEditorFileType"
+				},
+				{
+					"key": "z",
+					"name": "FZF",
+					"type": "command",
+					"command": "extension.fzf-quick-open"
+				}
+			]
+		}
+	]
 
 	// ========================================
 	// COMMENTS & DISABLED SETTINGS
