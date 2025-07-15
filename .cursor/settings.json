@@ -1,269 +1,269 @@
 {
-    "editor.fontSize": 14,
-    "editor.lineHeight": 1.8,
-    "javascript.suggest.autoImports": true,
-    "javascript.updateImportsOnFileMove.enabled": "always",
-    "typescript.tsserver.log": "off",
-    "workbench.tree.enableStickyScroll": false,
-    "files.associations": {
-      ".env.*": "dotenv",
-      ".prettierrc": "json",
-      "*.css": "css",
-      ".dev.vars": "dotenv"
-    },
-    "symbols.files.associations": {
-      "*.module.ts": "nest",
-      "*.guard.ts": "typescript",
-      "*.spec.ts": "ts-test",
-      "*.e2e-spec.ts": "ts-test",
-      "*.mock.ts": "ts-test",
-      "vitest.config.e2e.ts": "vite",
-      ".env.development.local": "gear",
-      ".env.test.local": "gear",
-      ".env.local": "gear",
-      ".env.example": "gear"
-    },
-    "editor.parameterHints.enabled": false,
-    "editor.renderLineHighlight": "gutter",
-    "typescript.updateImportsOnFileMove.enabled": "always",
-    "editor.suggestSelection": "first",
-    "explorer.confirmDelete": false,
-    "typescript.suggest.autoImports": true,
-    "typescript.preferences.preferTypeOnlyAutoImports": true,
-    "workbench.editor.labelFormat": "short",
-    "editor.fontLigatures": true,
-    "emmet.includeLanguages": {
-      "javascript": "javascriptreact"
-    },
-    "emmet.syntaxProfiles": {
-      "javascript": "jsx"
-    },
-    "editor.acceptSuggestionOnCommitCharacter": false,
-    "explorer.compactFolders": false,
-    "git.enableSmartCommit": true,
-    "editor.accessibilitySupport": "off",
-    "explorer.confirmDragAndDrop": false,
-    "editor.semanticHighlighting.enabled": false,
-    "editor.fontFamily": "Menlo",
-    "editor.tabSize": 2,
-    "security.workspace.trust.untrustedFiles": "newWindow",
-    "files.exclude": {
-      "**/CVS": true,
-      "**/.DS_Store": true,
-      "**/.hg": true,
-      "**/.svn": true,
-      "**/.git": true,
-      ".vscode": true
-    },
-    "workbench.iconTheme": "symbols",
-    "window.commandCenter": false,
-    "git.openRepositoryInParentFolders": "always",
-    "symbols.hidesExplorerArrows": true,
-    "workbench.editor.empty.hint": "hidden",
-    "update.showReleaseNotes": false,
-    "security.promptForLocalFileProtocolHandling": false,
-    "workbench.activityBar.location": "hidden",
-    "editor.hideCursorInOverviewRuler": true,
-    "editor.minimap.enabled": false,
-    "window.titleBarStyle": "native",
-    "editor.scrollbar.vertical": "hidden",
-    "explorer.sortOrder": "foldersNestsFiles",
-    "explorer.fileNesting.patterns": {
-      "package.json": ".eslint*, prettier*, tsconfig*, vite*, pnpm-*, bun.lockb, nest*, package-lock*",
-      "tailwind.config.*": "tailwind.config*, postcss.config*",
-      ".env.local": ".env*",
-      ".env": ".env*"
-    },
-    "explorer.fileNesting.enabled": true,
-    "editor.tokenColorCustomizations": {
-      "textMateRules": []
-    },
-    "workbench.colorTheme": "Miraculous Theme",
-    "[typescript]": {
-      "editor.defaultFormatter": "biomejs.biome"
-    },
-    "editor.codeActionsOnSave": {
-      
-      "quickfix.biome": "always",
-      // "source.addMissingImports.ts": "always",
-      // "source.removeUnusedImports": "always",
-      // "source.organizeImports": "always",
-      // "source.sortImports": "always"
-    },
-    "git.autofetch": true,
-    "git.confirmSync": false,
-    "[typescriptreact]": {
-      "editor.defaultFormatter": "biomejs.biome"
-    },
-    "workbench.sideBar.location": "right",
-    "window.autoDetectColorScheme": true,
-    "editor.defaultFormatter": "biomejs.biome",
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
-    "files.autoSave": "onWindowChange",
-    "terminal.integrated.fontFamily": "JetBrains Mono",
-    "terminal.integrated.fontSize": 12,
-    "apc.electron": {
-      // "transparent": true,
-      // "opacity": 0.95,
-      "backgroundColor": "#00000000",
-      "frame": false,
-      "vibrancy": "ultra-dark",
-      "visualEffectState": "active"
-    },
-    "apc.stylesheet": {
-      ".inline-tabs-placeholder": "display: none !important;",
-      ".monaco-hover": "border: 1px solid #007ACC !important;",
-      ".tree": "border: 1px solid #007ACC !important;",
-      ".quick-input-widget": {
-        "width": "900px !important",
-        // "left": "41% !important",
-        "top": "250px !important",
-        "padding": "15px !important",
-        "background-color": "rgb(30, 30, 30) !important",
-        "border-radius": "10px !important",
-        "border": "1px solid #007ACC !important"
-      },
-    },
-    "apc.font.family": "JetBrains Mono",
-    "apc.listRow": {
-      "lists": ["quick-input-list", "results"],
-      "height": 30
-    },
-    "apc.menubar.compact": true,
-    "apc.activityBar": {},
-    "terminal.integrated.gpuAcceleration": "on",
-    "errorLens.statusBarIconsEnabled": true,
-    "errorLens.statusBarMessageEnabled": true,
-    "errorLens.statusBarMessageTemplate": "$message",
-    "projectManager.sortList": "Name",
-    // "projectManager.any.baseFolders": ["~"],
-    "projectManager.any.maxDepthRecursion": 1,
-    "projectManager.git.baseFolders": ["~/Blog", "~/Code"],
-    "projectManager.git.maxDepthRecursion": 2,
-    "projectManager.any.ignoredFolders": [
-      "node_modules",
-      "out",
-      "typings",
-      "test"
-    ],
-    "projectManager.showProjectNameInStatusBar": true,
-    "notebook.experimental.generate": true,
-    "terminal.integrated.suggest.enabled": true,
-    "cursor.cpp.disabledLanguages": ["scminput"],
-    // "window.density.editorTabHeight": "compact",
-    "explorer.openEditors.visible": 1,
-    "errorLens.codeLensEnabled": true,
-    "editor.codeLensFontFamily": "JetBrains Mono",
-    "editor.experimentalInlineEdit.fontFamily": "JetBrains Mono",
-    "editor.inlayHints.fontFamily": "JetBrains Mono",
-    "editor.inlineSuggest.fontFamily": "JetBrains Mono",
-    "debug.console.fontFamily": "JetBrains Mono",
-    "scm.inputFontFamily": "JetBrains Mono",
-    "notebook.output.fontFamily": "JetBrains Mono",
-    "chat.editor.fontFamily": "JetBrains Mono",
-    "errorLens.fontFamily": "JetBrains Mono",
-    "workbench.panel.opensMaximized": "always",
-    "workbench.editor.enablePreviewFromCodeNavigation": true,
-    "workbench.editor.enablePreviewFromQuickOpen": true,
-    "terminal.integrated.tabs.enabled": false,
-    "workbench.editor.tabActionCloseVisibility": false,
-    "terminal.integrated.env.osx": {
-      "FIG_NEW_SESSION": "1"
-    },
-    "workbench.editor.limit.enabled": false,
-    "workbench.editor.limit.value": 3,
-    "workbench.editor.limit.excludeDirty": true,
-    "workbench.editor.pinnedTabSizing": "compact",
-    // "workbench.editor.tabSizing": "shrink",
-    "workbench.editor.highlightModifiedTabs": true,
-    "update.mode": "start",
-    "window.title": "",
-    "terminal.integrated.enableMultiLinePasteWarning": "auto",
-    "terminal.explorerKind": "integrated",
-    "debug.terminal.clearBeforeReusing": true,
-    "terminal.integrated.defaultProfile.osx": "zsh",
-    "errorLens.messageTemplate": "$message - $source",
-    "editor.stickyScroll.enabled": true,
-    "errorLens.excludePatterns": [
-      "[\"node_modules\", \"**/node_modules\"]",
-      "\"node_modules\"",
-      "node_modules",
-      " [\"**/*.{js}\"]",
-      "**/node_modules"
-    ],
-    "editor.codeLens": false,
-    "errorLens.enabledDiagnosticLevels": ["error", "warning"],
-    "errorLens.severityText": ["ERROR", "WARNING", "HINT", "ERROR"],
-    "errorLens.light": {},
-    "git.terminalGitEditor": true,
-    "editor.scrollbar.horizontal": "hidden",
-    "editor.overviewRulerBorder": false,
-    "editor.bracketPairColorization.enabled": true,
-    "editor.guides.bracketPairs": "active",
-    "editor.inlineSuggest.enabled": true,
-    "animations.Install-Method": "Apc Customize UI++",
-    "animations.Tabs": "None",
-    "animations.Scrolling": "None",
-    "animations.Enabled": true,
-    "apc.imports": [
-      "file://${userHome}/.cursor/extensions/brandonkirbyson.vscode-animations-2.0.7/dist/updateHandler.js"
-    ],
-    "cursor.cpp.enablePartialAccepts": true,
-    "gitlens.integrations.enabled": true,
-    "gitlens.statusBar.alignment": "left",
-    "gitlens.graph.layout": "editor",
-    "gitlens.cloudPatches.experimental.layout": "editor",
-    "gitlens.autolinks": [
-      {
-        "prefix": "API-2385",
-        "url": "https://dnm-radiofrance.atlassian.net/browse/API-2385"
-      }
-    ],
-    "gitlens.blame.fontFamily": "JetBrains Mono",
-    "gitlens.graph.dateStyle": "absolute",
-    "vim.useSystemClipboard": true,
-    "editor.cursorBlinking": "solid",
-  
-    //
-    "workbench.editor.editorActionsLocation": "hidden",
-    "editor.renderWhitespace": "none",
-    "editor.renderControlCharacters": false,
-  
-    "apc.sidebar.titlebar": {
-      "fontSize": 0.001
-    },
-    "editor.glyphMargin": false,
-    // "background.fullscreen": {
-    //   // "images": [
-    //   //   "https://r4.wallpaperflare.com/wallpaper/12/827/723/kentaro-miura-berserk-guts-wallpaper-39b0581d018aed2ba6b7889f80b166fd.jpg"
-    //   // ],
-    //   "opacity": 0.95,
-    //   "size": "cover",
-    //   "position": "center",
-    //   "interval": 0
-    // },
-    "githubPullRequests.pullBranch": "never",
-    "workbench.statusBar.visible": true,
-    // Line Numbers
-    // "editor.lineNumbers": "relative",
-    "workbench.layoutControl.enabled": false,
-    "animations.Smooth-Mode": false,
-    "workbench.reduceMotion": "on",
-    "animations.Active": "None",
-    "animations.Command-Palette": "None",
-    "tailwindCSS.experimental.classRegex": [
-      ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
-      ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-    ],
-    "sonarlint.focusOnNewCode": false,
-    "cursor.chat.terminalShowHoverHint": false,
-    "cursor.cmdk.useThemedDiffBackground": true,
-    "redhat.telemetry.enabled": false,
-    "RadonIDE.panelLocation": "tab",
-    "workbench.preferredLightColorTheme": "Min Light",
-    "lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB",
-    "lldb.launch.expressions": "native",
-    "workbench.preferredDarkColorTheme": "poimandres"
-  }
-  
+	// ========================================
+	// EDITOR APPEARANCE & BEHAVIOR
+	// ========================================
+	"editor.tabSize": 2,
+	"editor.cursorBlinking": "solid",
+	"editor.renderLineHighlight": "gutter",
+	"editor.renderWhitespace": "none",
+	"editor.renderControlCharacters": false,
+	"editor.glyphMargin": false,
+	"editor.overviewRulerBorder": false,
+	"editor.bracketPairColorization.enabled": true,
+	"editor.guides.bracketPairs": "active",
+	"editor.hideCursorInOverviewRuler": true,
+	"editor.minimap.enabled": false,
+	"editor.scrollbar.vertical": "hidden",
+	"editor.scrollbar.horizontal": "hidden",
+	"editor.stickyScroll.enabled": true,
+	"editor.codeLens": true,
+	"editor.inlineSuggest.enabled": true,
+	"editor.semanticHighlighting.enabled": false,
+	"editor.accessibilitySupport": "off",
+	"editor.parameterHints.enabled": false,
+	"editor.suggestSelection": "first",
+	"editor.acceptSuggestionOnCommitCharacter": false,
+	"editor.lineNumbers": "relative",
+
+	// ========================================
+	// EDITOR FORMATTING & ACTIONS
+	// ========================================
+	"editor.defaultFormatter": "biomejs.biome",
+	"editor.formatOnSave": true,
+	"editor.formatOnPaste": true,
+	"editor.codeActionsOnSave": {
+		"quickfix.biome": "always"
+		// "source.addMissingImports.ts": "always",
+		// "source.removeUnusedImports": "always",
+		// "source.organizeImports": "always",
+		// "source.sortImports": "always"
+	},
+
+	// ========================================
+	// LANGUAGE-SPECIFIC SETTINGS
+	// ========================================
+	"[typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"javascript.suggest.autoImports": true,
+	"javascript.updateImportsOnFileMove.enabled": "always",
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"typescript.suggest.autoImports": true,
+	"typescript.preferences.preferTypeOnlyAutoImports": true,
+	"typescript.tsserver.log": "off",
+
+	// ========================================
+	// EMMET CONFIGURATION
+	// ========================================
+	"emmet.includeLanguages": {
+		"javascript": "javascriptreact"
+	},
+	"emmet.syntaxProfiles": {
+		"javascript": "jsx"
+	},
+
+	// ========================================
+	// WORKBENCH APPEARANCE & LAYOUT
+	// ========================================
+	"workbench.preferredDarkColorTheme": "poimandres",
+	"workbench.iconTheme": "symbols",
+	"workbench.sideBar.location": "right",
+	"workbench.activityBar.location": "hidden",
+	"workbench.editor.labelFormat": "short",
+	"workbench.editor.empty.hint": "hidden",
+	"workbench.panel.opensMaximized": "always",
+	"workbench.editor.enablePreviewFromCodeNavigation": true,
+	"workbench.editor.enablePreviewFromQuickOpen": true,
+	"workbench.editor.tabActionCloseVisibility": false,
+	"workbench.editor.limit.enabled": false,
+	"workbench.editor.limit.value": 3,
+	"workbench.editor.limit.excludeDirty": true,
+	"workbench.editor.pinnedTabSizing": "compact",
+	"workbench.editor.highlightModifiedTabs": true,
+	"workbench.editor.editorActionsLocation": "hidden",
+	"workbench.tree.enableStickyScroll": false,
+	"workbench.statusBar.visible": true,
+	"workbench.layoutControl.enabled": false,
+	"workbench.reduceMotion": "on",
+
+	// ========================================
+	// WINDOW & UI CUSTOMIZATION
+	// ========================================
+	"window.commandCenter": false,
+	"window.autoDetectColorScheme": true,
+	"window.titleBarStyle": "native",
+	"window.title": "",
+	"update.showReleaseNotes": false,
+	"update.mode": "start",
+
+	// ========================================
+	// CUSTOM UI STYLING
+	// ========================================
+	"custom-ui-style.electron": {
+		"transparent": true,
+		"opacity": 0.95,
+		"backgroundColor": "#00000000",
+		"frame": false,
+		"vibrancy": "ultra-dark",
+		"visualEffectState": "active"
+	},
+	"custom-ui-style.stylesheet": {
+		".inline-tabs-placeholder": "display: none !important;",
+		".monaco-hover": "border: 1px solid #5CE2C3 !important;",
+		".tree": "border: 1px solid #5CE2C3 !important;",
+		".quick-input-widget": {
+			"width": "900px !important",
+			"left": "50% !important",
+			"top": "30% !important",
+			"transform": "translate(-50%, -50%) !important",
+			"padding": "15px !important",
+			"background-color": "#1b1e28 !important",
+			"border-radius": "10px !important",
+			"border": "1px solid #5CE2C3 !important"
+		}
+	},
+	"custom-ui-style.font.monospace": "JetBrains Mono",
+	"custom-ui-style.font.sansSerif": "JetBrains Mono",
+	// ========================================
+	// FONT FAMILY SETTINGS
+	// ========================================
+	"editor.fontSize": 15,
+	"editor.lineHeight": 1.8,
+	"editor.fontFamily": "JetBrains Mono",
+	"editor.fontLigatures": true,
+	"editor.codeLensFontFamily": "JetBrains Mono",
+	"editor.inlayHints.fontFamily": "JetBrains Mono",
+	"editor.inlineSuggest.fontFamily": "JetBrains Mono",
+	"debug.console.fontFamily": "JetBrains Mono",
+	"scm.inputFontFamily": "JetBrains Mono",
+	"notebook.output.fontFamily": "JetBrains Mono",
+	"errorLens.fontFamily": "JetBrains Mono",
+
+	// ========================================
+	// EXPLORER & FILE MANAGEMENT
+	// ========================================
+	"explorer.confirmDelete": false,
+	"explorer.compactFolders": false,
+	"explorer.confirmDragAndDrop": false,
+	"explorer.sortOrder": "foldersNestsFiles",
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.patterns": {
+		"package.json": ".eslint*, prettier*, tsconfig*, vite*, pnpm-*, bun.lockb, nest*, package-lock*",
+		"tailwind.config.*": "tailwind.config*, postcss.config*",
+		".env.local": ".env*",
+		".env": ".env*"
+	},
+	"explorer.openEditors.visible": 1,
+	"files.autoSave": "onWindowChange",
+	"files.exclude": {
+		"**/CVS": true,
+		"**/.DS_Store": true,
+		"**/.hg": true,
+		"**/.svn": true,
+		"**/.git": true,
+		".vscode": true
+	},
+	"files.associations": {
+		".env.*": "dotenv",
+		".prettierrc": "json",
+		"*.css": "css",
+		".dev.vars": "dotenv"
+	},
+
+	// ========================================
+	// SYMBOLS & NAVIGATION
+	// ========================================
+	"symbols.files.associations": {
+		"*.module.ts": "nest",
+		"*.guard.ts": "typescript",
+		"*.spec.ts": "ts-test",
+		"*.e2e-spec.ts": "ts-test",
+		"*.mock.ts": "ts-test",
+		"vitest.config.e2e.ts": "vite",
+		".env.development.local": "gear",
+		".env.test.local": "gear",
+		".env.local": "gear",
+		".env.example": "gear"
+	},
+	"symbols.hidesExplorerArrows": true,
+
+	// ========================================
+	// GIT & VERSION CONTROL
+	// ========================================
+	"git.enableSmartCommit": true,
+	"git.autofetch": false,
+	"git.confirmSync": false,
+	"git.openRepositoryInParentFolders": "always",
+	"git.terminalGitEditor": false,
+
+	// ========================================
+	// ERROR LENS CONFIGURATION
+	// ========================================
+	"errorLens.statusBarIconsEnabled": true,
+	"errorLens.statusBarMessageEnabled": true,
+	"errorLens.statusBarMessageTemplate": "$message",
+	"errorLens.codeLensEnabled": true,
+	"errorLens.messageTemplate": "$message - $source",
+	"errorLens.excludePatterns": [
+		"[\"node_modules\", \"**/node_modules\"]",
+		"\"node_modules\"",
+		"node_modules",
+		" [\"**/*.{js}\"]",
+		"**/node_modules"
+	],
+	"errorLens.enabledDiagnosticLevels": ["error", "warning"],
+	"errorLens.severityText": ["ERROR", "WARNING", "HINT", "ERROR"],
+	"errorLens.light": {},
+
+	// ========================================
+	// PROJECT MANAGER
+	// ========================================
+	"projectManager.sortList": "Name",
+	"projectManager.any.maxDepthRecursion": 1,
+	"projectManager.git.baseFolders": ["~/Dev"],
+	"projectManager.git.maxDepthRecursion": 2,
+	"projectManager.any.ignoredFolders": [
+		"node_modules",
+		"out",
+		"typings",
+		"test"
+	],
+	"projectManager.showProjectNameInStatusBar": true,
+
+	// ========================================
+	// SECURITY & TRUST
+	// ========================================
+	"security.workspace.trust.untrustedFiles": "newWindow",
+	"security.promptForLocalFileProtocolHandling": false,
+
+	// ========================================
+	// DEBUGGING & DEVELOPMENT
+	// ========================================
+	"debug.terminal.clearBeforeReusing": true,
+	"lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB",
+	"lldb.launch.expressions": "native",
+
+	// ========================================
+	// EXTENSIONS & FEATURES
+	// ========================================
+	"cursor.cpp.enablePartialAccepts": true,
+	"vim.useSystemClipboard": true
+
+	// ========================================
+	// COMMENTS & DISABLED SETTINGS
+	// ========================================
+	// "window.density.editorTabHeight": "compact",
+	// "workbench.editor.tabSizing": "shrink",
+	// "background.fullscreen": {
+	//   // "images": [
+	//   //   "https://r4.wallpaperflare.com/wallpaper/12/827/723/kentaro-miura-berserk-guts-wallpaper-39b0581d018aed2ba6b7889f80b166fd.jpg"
+	//   // ],
+	//   "opacity": 0.95,
+	//   "size": "cover",
+	//   "position": "center",
+	//   "interval": 0
+	// }
+}
