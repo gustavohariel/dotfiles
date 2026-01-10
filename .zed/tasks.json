@@ -1,0 +1,33 @@
+// tasks.json
+[
+	// task for starting lazygit
+	{
+		"label": "start lazygit",
+		"command": "lazygit -p $ZED_WORKTREE_ROOT",
+		"reveal": "always",
+		"hide": "on_success"
+	},
+	//fuzzy finder
+	{
+		"label": "file_finder",
+		"command": "zed \"$(tv files)\"",
+		"hide": "always",
+		"allow_concurrent_runs": true,
+		"use_new_terminal": true,
+		"shell": {
+			"program": "/bin/zsh"
+		}
+	},
+	// grep search
+	{
+		"label": "grep_search",
+		// Use the command with the --exact flag to disable fuzzy search so it only gives you exact matches
+		"command": "zed \"$(tv --exact text)\"",
+		"hide": "always",
+		"allow_concurrent_runs": true,
+		"use_new_terminal": true,
+		"shell": {
+			"program": "/bin/sh"
+		}
+	}
+]
