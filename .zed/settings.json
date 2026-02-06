@@ -29,9 +29,6 @@
   },
   "use_system_window_tabs": true,
   "bottom_dock_layout": "contained",
-  "which_key": {
-    "enabled": true
-  },
   "tabs": {
     "show_diagnostics": "all",
     "close_position": "right",
