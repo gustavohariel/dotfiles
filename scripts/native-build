@@ -1,0 +1,116 @@
+#!/usr/bin/env zsh
+
+set -euo pipefail
+
+# Defaults
+mode="symlink"
+platforms=()
+force=false
+
+# Parse args
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --ios)      platforms+=(ios); shift ;;
+    --android)  platforms+=(android); shift ;;
+    --copy)     mode="copy"; shift ;;
+    --symlink)  mode="symlink"; shift ;;
+    --force)    force=true; shift ;;
+    -h|--help)
+      echo "Usage: native-build [--ios] [--android] [--copy|--symlink] [--force]"
+      echo ""
+      echo "Copy or symlink native build folders from the main git worktree."
+      echo ""
+      echo "Options:"
+      echo "  --ios       Include ios folder"
+      echo "  --android   Include android folder"
+      echo "  --copy      Copy the folder (isolated, rebuildable)"
+      echo "  --symlink   Symlink the folder (default, fast, shared)"
+      echo "  --force     Overwrite existing target"
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      exit 1
+      ;;
+  esac
+done
+
+if [[ ${#platforms[@]} -eq 0 ]]; then
+  echo "Error: specify at least --ios or --android" >&2
+  exit 1
+fi
+
+# Find main worktree
+main_worktree=$(git worktree list | head -1 | awk '{print $1}')
+
+if [[ -z "$main_worktree" ]]; then
+  echo "Error: could not detect main git worktree" >&2
+  exit 1
+fi
+
+current_dir=$(pwd)
+
+if [[ "$current_dir" == "$main_worktree" ]]; then
+  echo "Error: you're already in the main worktree. Run this from a Conductor workspace." >&2
+  exit 1
+fi
+
+echo "Main worktree: $main_worktree"
+echo "Mode: $mode"
+echo ""
+
+for platform in "${platforms[@]}"; do
+  source_path="$main_worktree/$platform"
+
+  # Check if source exists and is a real directory (not a broken symlink)
+  if [[ ! -d "$source_path" ]] || [[ -L "$source_path" && ! -e "$source_path" ]]; then
+    echo "→ $platform not found in main worktree, running prebuild..."
+
+    # Clean up broken symlinks for both platforms before prebuild
+    # (expo prebuild checks both even with --platform flag)
+    for p in ios android; do
+      if [[ -L "$main_worktree/$p" && ! -e "$main_worktree/$p" ]]; then
+        echo "  Removing broken symlink: $p"
+        rm "$main_worktree/$p"
+      fi
+    done
+
+    (cd "$main_worktree" && bun expo prebuild --platform "$platform")
+
+    if [[ ! -d "$source_path" ]]; then
+      echo "Error: prebuild did not create $platform folder" >&2
+      exit 1
+    fi
+  fi
+
+  target_path="$current_dir/$platform"
+
+  # Handle existing target
+  if [[ -e "$target_path" || -L "$target_path" ]]; then
+    # Check if already symlinked to the same source
+    if [[ -L "$target_path" ]] && [[ "$(readlink "$target_path")" == "$source_path" ]]; then
+      echo "✓ $platform already symlinked to main — skipping"
+      continue
+    fi
+
+    if [[ "$force" == false ]]; then
+      echo "Error: $platform already exists. Use --force to overwrite." >&2
+      exit 1
+    fi
+
+    echo "→ Removing existing $platform..."
+    rm -rf "$target_path"
+  fi
+
+  # Create symlink or copy
+  if [[ "$mode" == "symlink" ]]; then
+    ln -s "$source_path" "$target_path"
+    echo "✓ $platform symlinked → $source_path"
+  else
+    cp -a "$source_path" "$target_path"
+    echo "✓ $platform copied from main"
+  fi
+done
+
+echo ""
+echo "Done!"
