@@ -4,16 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Personal dotfiles. No build/lint/test pipeline — the "commands" are symlink-deploy steps that put each config where its tool expects to find it. The user's global `~/.claude/CLAUDE.md` notes this repo is the canonical place for dotfiles edits, so changes to tracked files should land here, not in `$HOME`.
+Personal dotfiles. No build/lint/test pipeline and **no install script** — deploy is manual symlinking. The user's global `~/.claude/CLAUDE.md` notes this repo is the canonical place for dotfiles edits, so changes to tracked files should land here, not in `$HOME`.
 
 ## Layout
 
-- `zsh/zshrc` — zsh config (zinit + powerlevel10k + plugins, fzf, zoxide).
-- `.zed/` — Zed editor settings, keymap, tasks.
-- `.cursor/` — Cursor editor settings + keybinds. **Not** `.cursor/rules/` AI rules — these are GUI editor settings. Note `.cursor/keybinds.json` is named differently from Cursor's actual config file (`keybindings.json`); `install.sh` deliberately does not deploy this directory because the file name and OS-specific target path need a human decision.
-- `superset/themes/` — Apache Superset themes (loaded inside the Superset app, no filesystem deploy).
-- `scripts/install.sh` — symlink installer. Resolves `$DOTFILES` from its own location, so the repo can live anywhere (e.g. `~/sandbox/dotfiles`).
-- `README.md` — short, user-facing description.
+- `zsh/zshrc` — zsh config (zinit + powerlevel10k + plugins, fzf, zoxide). See platform note below.
+- `.zed/` — Zed editor settings, keymap, tasks. Deploys to `~/.config/zed/` on both Linux and macOS.
+- `.cursor/` — Cursor editor settings + keybinds. **Not** `.cursor/rules/` AI rules — these are GUI editor settings. Two gotchas if you wire it up: (1) the file is `keybinds.json` here but Cursor reads `keybindings.json`, and (2) the user config dir is `~/.config/Cursor/User/` on Linux vs. `~/Library/Application Support/Cursor/User/` on macOS.
+- `superset/themes/` — Apache Superset themes, loaded inside the Superset app. No filesystem deploy.
+- `README.md` — short, user-facing description with a deploy-target table.
 
 ## Platform mismatch in `zsh/zshrc`
 

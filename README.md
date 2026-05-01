@@ -1,22 +1,20 @@
 # Dotfiles
 
-Personal configuration files for:
-- zsh (`zsh/zshrc`)
-- Zed editor (`.zed/`)
+Personal configuration files.
 
-Also tracked but not auto-deployed by `install.sh`:
-- Cursor editor settings (`.cursor/`) — file naming and target path differ by OS; deploy by hand.
-- Apache Superset themes (`superset/themes/`) — loaded inside the Superset app, no filesystem symlink.
+| Path | Tool | Deploy target |
+| --- | --- | --- |
+| `zsh/zshrc` | zsh | `~/.zshrc` |
+| `.zed/` | Zed editor | `~/.config/zed/` |
+| `.cursor/` | Cursor editor | `~/.config/Cursor/User/` (Linux) or `~/Library/Application Support/Cursor/User/` (macOS) |
+| `superset/themes/` | Apache Superset | loaded inside the app, no filesystem deploy |
 
-## Installation
+No install script — symlink by hand:
 
 ```bash
-git clone <repo-url> ~/sandbox/dotfiles
-cd ~/sandbox/dotfiles
-./scripts/install.sh
+ln -sfn "$PWD/zsh/zshrc" ~/.zshrc
+# ...etc.
 ```
-
-The script symlinks tracked files to their expected locations under `$HOME`, overwriting whatever is there. Back up existing files first if you want to keep them.
 
 ## License
 MIT
