@@ -1,19 +1,32 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-DOTFILES="$HOME/dotfiles"
+# Resolve the dotfiles dir from this script's location, so the repo can live
+# anywhere (e.g. ~/sandbox/dotfiles, not just ~/dotfiles).
+DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# Neovim setup
-mkdir -p ~/.config/nvim
-ln -sf $DOTFILES/nvim/init.lua ~/.config/nvim/init.lua
-ln -sf $DOTFILES/nvim/lua ~/.config/nvim/lua
+link() {
+  local src="$1" dst="$2"
+  mkdir -p "$(dirname "$dst")"
+  ln -sfn "$src" "$dst"
+  echo "  $dst -> $src"
+}
 
-# tmux setup
-ln -sf $DOTFILES/tmux/tmux.conf ~/.tmux.conf
+echo "Linking from $DOTFILES"
 
-# Ghostty setup
-# ln -sf $DOTFILES/ghostty/config ~/.config/ghostty/conig
+# zsh
+link "$DOTFILES/zsh/zshrc" "$HOME/.zshrc"
 
-# zsh setup
-ln -sf $DOTFILES/zsh/zshrc ~/.zshrc
+# Zed (~/.config/zed is the user config dir on both Linux and macOS)
+link "$DOTFILES/.zed/settings.json" "$HOME/.config/zed/settings.json"
+link "$DOTFILES/.zed/keymap.json"   "$HOME/.config/zed/keymap.json"
+link "$DOTFILES/.zed/tasks.json"    "$HOME/.config/zed/tasks.json"
 
-echo "Dotfiles installation complete!"
+# Not auto-deployed:
+#   .cursor/      — file naming (keybinds.json vs Cursor's keybindings.json) and
+#                   target path (~/.config/Cursor/User on Linux,
+#                   ~/Library/Application Support/Cursor/User on macOS) need a
+#                   human decision. Deploy by hand.
+#   superset/themes/ — loaded inside the Superset app, no filesystem symlink.
+
+echo "Done."

@@ -1,28 +1,22 @@
 # Dotfiles
 
 Personal configuration files for:
-- Neovim
-- tmux
-- Ghostty Terminal
+- zsh (`zsh/zshrc`)
+- Zed editor (`.zed/`)
+
+Also tracked but not auto-deployed by `install.sh`:
+- Cursor editor settings (`.cursor/`) — file naming and target path differ by OS; deploy by hand.
+- Apache Superset themes (`superset/themes/`) — loaded inside the Superset app, no filesystem symlink.
 
 ## Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/dotfiles
-cd ~/dotfiles
+git clone <repo-url> ~/sandbox/dotfiles
+cd ~/sandbox/dotfiles
 ./scripts/install.sh
 ```
 
-## Components
-
-### Neovim
-Configuration files for Neovim text editor, including plugins and keybindings.
-
-### tmux
-Terminal multiplexer configuration with custom keybindings and status bar.
-
-### Ghostty
-Terminal emulator settings for optimal development experience.
+The script symlinks tracked files to their expected locations under `$HOME`, overwriting whatever is there. Back up existing files first if you want to keep them.
 
 ## License
 MIT
