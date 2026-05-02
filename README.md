@@ -7,7 +7,7 @@ Personal configuration files.
 | `zsh/zshrc` | zsh | `~/.zshrc` |
 | `.zed/` | Zed editor | `~/.config/zed/` |
 | `.cursor/` | Cursor editor | `~/.config/Cursor/User/` (Linux) or `~/Library/Application Support/Cursor/User/` (macOS) |
-| `superset/themes/` | Apache Superset | loaded inside the app, no filesystem deploy |
+| `superset/themes/` | [superset.sh](https://superset.sh) | loaded inside the app, no filesystem deploy |
 
 No install script — symlink by hand:
 
