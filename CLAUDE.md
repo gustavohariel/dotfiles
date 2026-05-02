@@ -9,6 +9,7 @@ Personal dotfiles. No build/lint/test pipeline and **no install script** — dep
 ## Layout
 
 - `zsh/zshrc` — zsh config (zinit + powerlevel10k + plugins, fzf, zoxide). See platform note below.
+- `nvim/` — Neovim config (lazy.nvim plugins, custom colors, snippets, spell). Deploys to `~/.config/nvim/`.
 - `.zed/` — Zed editor settings, keymap, tasks. Deploys to `~/.config/zed/` on both Linux and macOS.
 - `.cursor/` — Cursor editor settings + keybinds. **Not** `.cursor/rules/` AI rules — these are GUI editor settings. Two gotchas if you wire it up: (1) the file is `keybinds.json` here but Cursor reads `keybindings.json`, and (2) the user config dir is `~/.config/Cursor/User/` on Linux vs. `~/Library/Application Support/Cursor/User/` on macOS.
 - `superset/themes/` — themes for [superset.sh](https://superset.sh) (the dev tool, **not** Apache Superset). Loaded inside the app, no filesystem deploy.
