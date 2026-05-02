@@ -8,7 +8,10 @@ return {
 			"nvim-lua/plenary.nvim",
 			{
 				"nvim-telescope/telescope-fzf-native.nvim",
-				build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release",
+				-- CMAKE_POLICY_VERSION_MINIMUM=3.5 works around cmake 4+ dropping
+				-- compatibility with the pre-3.5 cmake_minimum_required this plugin's
+				-- CMakeLists.txt declares. Drop it once the plugin updates upstream.
+				build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 && cmake --build build --config Release",
 			},
 		},
 		config = function()
