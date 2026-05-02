@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+# target: ~/.local/bin/airpods-watch  (symlinked from staging tree)
+#
+# Hands-free auto-connect watcher for AirPods Pro 2. Runs as a systemd-user
+# service. Polls bluetoothctl every few seconds and connects the AirPods MAC
+# whenever it's paired but not connected. Backs off when the AirPods are in
+# their case (connect attempts fail fast) so we don't spam the journal.
+#
+# Realistic case-open-to-audio latency: 3-10 seconds. Linux has no portable
+# advertisement-triggered hook for classic BR/EDR, so polling is the simple
+# correct answer.
+#
+# Usage: airpods-watch <MAC>
+#        airpods-watch 30:7A:D2:8F:E8:1A
+
+set -u
+
+MAC=${1:-}
+if [ -z "$MAC" ]; then
+    echo "usage: $0 <MAC>" >&2
+    exit 2
+fi
+
+POLL_FAST=3       # seconds between attempts when AirPods recently seen
+POLL_SLOW=30      # seconds between attempts after consecutive failures
+FAIL_THRESHOLD=5  # consecutive failures before slowing down
+CONNECT_TIMEOUT=5 # how long bluetoothctl gets per attempt
+PROFILE_RETRIES=8 # how many 0.5s ticks to wait for the bluez card to appear
+PROFILE_SLEEP=0.5
+
+# PipeWire/PulseAudio object names use the MAC with underscores.
+MAC_USCORE=$(echo "$MAC" | tr ':' '_')
+CARD="bluez_card.${MAC_USCORE}"
+SINK="bluez_output.${MAC_USCORE}.1"
+
+fail_count=0
+
+# Clean shutdown for systemd
+trap 'echo "airpods-watch: shutting down"; exit 0' TERM INT
+
+# Read the bluez card's currently-active profile, or "" if the card isn't
+# present in PipeWire yet. Cheap to call every poll.
+get_profile() {
+    pactl list cards 2>/dev/null \
+        | awk -v name="Name: $CARD" '
+            $0 ~ name { in_card = 1 }
+            in_card && /Active Profile:/ { print $3; exit }
+        '
+}
+
+# Full audio activation: set profile to a2dp-sink (AAC) and make it the default
+# sink. Used on the connect transition (no→yes), matching macOS take-out-of-case
+# → audio-routes-here UX. Retries because pactl may run before PipeWire has
+# discovered the new card after a fresh bluetoothctl connect.
+force_a2dp() {
+    local i=0
+    while [ "$i" -lt "$PROFILE_RETRIES" ]; do
+        if pactl set-card-profile "$CARD" a2dp-sink >/dev/null 2>&1; then
+            pactl set-default-sink "$SINK" >/dev/null 2>&1 || true
+            echo "airpods-watch: profile=a2dp-sink, default sink=$SINK"
+            return 0
+        fi
+        i=$((i + 1))
+        sleep "$PROFILE_SLEEP"
+    done
+    echo "airpods-watch: WARNING: failed to set $CARD profile to a2dp-sink after $PROFILE_RETRIES retries"
+    return 1
+}
+
+# Self-healing: while AirPods are connected at the BT level, occasionally the
+# bluez profile flips (or never came up) to "off" — e.g. after suspend/resume,
+# or when librepods drops the connection internally without bluez disconnecting.
+# Symptom: AirPods show as connected but Noctalia output picker doesn't list
+# them. This restores the audio profile WITHOUT touching default-sink (so the
+# user's manual output choice is preserved if they intentionally moved audio
+# to the speakers mid-session).
+heal_profile_if_off() {
+    local current
+    current=$(get_profile)
+    if [ "$current" = "off" ]; then
+        echo "airpods-watch: profile=off while connected — healing to a2dp-sink"
+        pactl set-card-profile "$CARD" a2dp-sink >/dev/null 2>&1 \
+            && echo "airpods-watch: profile reset to a2dp-sink" \
+            || echo "airpods-watch: WARNING: heal failed (card may be in transition)"
+    fi
+}
+
+# Track BT-level connection state across iterations so we can distinguish
+# "just transitioned to connected" (full audio claim) from "already steady-state
+# connected" (only heal if profile flipped to off).
+was_connected="no"
+
+echo "airpods-watch: starting for $MAC (fast=${POLL_FAST}s, slow=${POLL_SLOW}s after ${FAIL_THRESHOLD} fails)"
+
+while true; do
+    info=$(bluetoothctl info "$MAC" 2>&1)
+
+    # If the device is unknown to the controller, sleep slow and retry.
+    if echo "$info" | grep -q "Device $MAC not available"; then
+        echo "airpods-watch: $MAC not in controller's device list; sleeping ${POLL_SLOW}s"
+        was_connected="no"
+        sleep "$POLL_SLOW" &
+        wait $!
+        continue
+    fi
+
+    paired=$(echo "$info" | grep -q "Paired: yes" && echo yes || echo no)
+    connected=$(echo "$info" | grep -q "Connected: yes" && echo yes || echo no)
+
+    if [ "$paired" = "no" ]; then
+        echo "airpods-watch: $MAC not paired; nothing to do; sleeping ${POLL_SLOW}s"
+        was_connected="no"
+        sleep "$POLL_SLOW" &
+        wait $!
+        continue
+    fi
+
+    if [ "$connected" = "yes" ]; then
+        if [ "$was_connected" != "yes" ]; then
+            # Transition to connected (without us doing the connect — likely
+            # AirPods auto-reconnected, or librepods established the link).
+            # Claim audio fully.
+            echo "airpods-watch: $MAC came up (external connect); claiming audio"
+            force_a2dp
+        else
+            # Steady-state connected. Only intervene if profile slipped to off.
+            heal_profile_if_off
+        fi
+        was_connected="yes"
+        fail_count=0
+        sleep "$POLL_FAST" &
+        wait $!
+        continue
+    fi
+
+    was_connected="no"
+
+    # Paired but not connected → try to connect.
+    if timeout "$CONNECT_TIMEOUT" bluetoothctl connect "$MAC" >/dev/null 2>&1; then
+        echo "airpods-watch: connected $MAC"
+        force_a2dp
+        was_connected="yes"
+        fail_count=0
+        sleep "$POLL_FAST" &
+        wait $!
+    else
+        fail_count=$((fail_count + 1))
+        if [ "$fail_count" -le "$FAIL_THRESHOLD" ]; then
+            sleep "$POLL_FAST" &
+            wait $!
+        else
+            # Quiet period — AirPods are probably in the case or out of range.
+            # Don't log every poll, only the transition.
+            if [ "$fail_count" -eq "$((FAIL_THRESHOLD + 1))" ]; then
+                echo "airpods-watch: $FAIL_THRESHOLD failed attempts; backing off to ${POLL_SLOW}s polling"
+            fi
+            sleep "$POLL_SLOW" &
+            wait $!
+        fi
+    fi
+done

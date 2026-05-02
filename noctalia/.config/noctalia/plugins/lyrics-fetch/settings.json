@@ -1,0 +1,11 @@
+{
+  "widgetWidth": 300,
+  "scrollSpeed": 70,
+  "fontSize": 10,
+  "scrollMode": "always",
+  "hideWhenEmpty": true,
+  "adaptScrollSpeed": true,
+  "verticalRotationDirection": "auto",
+  "hideWhenPaused": true,
+  "fontFamily": "Noto Sans"
+}

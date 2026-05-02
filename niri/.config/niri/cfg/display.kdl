@@ -1,0 +1,21 @@
+// ────────────── Output Configuration ──────────────
+// Run `niri msg outputs` to inspect available displays and modes.
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
+//
+// Only one of these should be active at a time. Switch with the
+// `display-desk` / `display-tv` scripts (Mod+Shift+M / Mod+Shift+T).
+
+// LG Ultrawide — primary desk display
+output "DP-1" {
+    mode "3440x1440@159.962"
+    scale 1
+    position x=0 y=0
+}
+
+// Hisense TV — disabled by default; toggle on via `display-tv`
+output "HDMI-A-1" {
+    off
+    mode "3840x2160@144.050"
+    scale 1
+    position x=0 y=0
+}

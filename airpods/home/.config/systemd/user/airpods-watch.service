@@ -1,0 +1,20 @@
+# target: ~/.config/systemd/user/airpods-watch.service
+# AirPods Pro 2 hands-free auto-connect watcher. See ~/.local/bin/airpods-watch
+# for what it does.
+#
+# Tied to graphical-session.target so it starts/stops with the desktop session
+# (no point polling bluetoothctl when nobody's logged in). %h = $HOME.
+
+[Unit]
+Description=AirPods Pro 2 hands-free auto-connect watcher
+After=bluetooth.target graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/airpods-watch 30:7A:D2:8F:E8:1A
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical-session.target

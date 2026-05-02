@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Switch to Hisense TV on HDMI-A-1 at 4K@144Hz, disable LG ultrawide on DP-1.
+# Mode is set explicitly so niri doesn't fall back to the 60Hz preferred mode.
+set -euo pipefail
+
+niri msg output DP-1 off
+niri msg output HDMI-A-1 on
+niri msg output HDMI-A-1 mode 3840x2160@144.050

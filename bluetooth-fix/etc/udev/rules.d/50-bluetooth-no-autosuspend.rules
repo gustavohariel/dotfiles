@@ -1,0 +1,5 @@
+# target: /etc/udev/rules.d/50-bluetooth-no-autosuspend.rules
+# Keep Realtek RTL8761BU BT dongle from USB-autosuspending. Pairs with
+# /etc/modprobe.d/btusb.conf (kernel-level) for full coverage. The match
+# is vendor+product specific so other USB devices are unaffected.
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="8771", TEST=="power/control", ATTR{power/control}="on"

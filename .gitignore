@@ -2,3 +2,14 @@
 *.log
 *.swp
 .netrwhist
+
+# Niri rolls .bak.<timestamp> when its UI rewrites configs — runtime state, not tracked.
+*.bak.*
+
+# fish runtime state and host-local secrets.
+fish_variables
+private.fish
+
+# Noctalia hubstaff plugin lives in its own repo (~/sandbox/noctalia-hubstaff)
+# and is symlinked into ~/.config/noctalia/plugins/ at runtime — don't capture here.
+noctalia/.config/noctalia/plugins/hubstaff/
