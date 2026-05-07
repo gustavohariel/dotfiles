@@ -57,7 +57,7 @@
     "toolbar": {
       "breadcrumbs": false
     },
-    "button": false
+    "button": true
   },
   "status_bar": {
     "cursor_position_button": false,
@@ -161,6 +161,8 @@
   "agent_buffer_font_size": 15.0,
   "agent_ui_font_size": 16.0,
   "agent": {
+    "notify_when_agent_waiting": "all_screens",
+    "thinking_display": "always_collapsed",
     "show_turn_stats": true,
     "play_sound_when_agent_done": "always",
     "default_model": {
