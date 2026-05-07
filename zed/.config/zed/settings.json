@@ -7,8 +7,10 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "proxy": "",
+  "buffer_font_weight": 400.0,
   "edit_predictions": {
-    "provider": "mercury"
+    "provider": "zed"
   },
   "git": {
     "inline_blame": {
@@ -16,9 +18,6 @@
     }
   },
   "collaboration_panel": {
-    "button": false
-  },
-  "notification_panel": {
     "button": false
   },
   "git_panel": {
@@ -49,12 +48,12 @@
     "show_onboarding_banner": true,
     "show_project_items": true,
     "show_branch_name": true,
-    "show_branch_icon": false
   },
   "debugger": {
     "button": true
   },
   "terminal": {
+    "font_size": 16.0,
     "toolbar": {
       "breadcrumbs": false
     },
@@ -81,7 +80,7 @@
     "file_icons": true,
     "entry_spacing": "standard",
     "default_width": 240.0,
-    "dock": "left",
+    "dock": "right",
     "button": true
   },
   "close_on_file_delete": true,
@@ -141,7 +140,7 @@
   "relative_line_numbers": "disabled",
   "auto_signature_help": false,
   "show_signature_help_after_edits": false,
-  "vim_mode": true,
+  "vim_mode": false,
   "base_keymap": "Cursor",
   "current_line_highlight": "all",
   "cursor_shape": "bar",
@@ -153,28 +152,17 @@
   },
   "redact_private_values": false,
   "on_last_window_closed": "quit_app",
-  "icon_theme": "Symbols Icon Theme",
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Symbols Icon Theme",
+    "dark": "Symbols Icon Theme"
+  },
   "autosave": "on_focus_change",
-  "agent_buffer_font_size": 14.0,
-  "agent_ui_font_size": 14.0,
+  "agent_buffer_font_size": 15.0,
+  "agent_ui_font_size": 16.0,
   "agent": {
     "show_turn_stats": true,
-    "play_sound_when_agent_done": true,
-    "tool_permissions": {
-      "tools": {
-        "save_file": {
-          "default_mode": "allow"
-        },
-        "terminal": {
-          "default_mode": "allow",
-          "always_allow": [
-            {
-              "pattern": "^git\\s",
-            },
-          ],
-        },
-      },
-    },
+    "play_sound_when_agent_done": "always",
     "default_model": {
       "provider": "zed.dev",
       "model": "claude-opus-4-6",
@@ -183,16 +171,19 @@
     "model_parameters": [],
   },
   "agent_servers": {
+    "claude-acp": {
+      "type": "registry"
+    },
     "opencode": {
       "type": "registry",
     },
   },
-  "ui_font_size": 14.0,
-  "buffer_font_size": 14.0,
+  "ui_font_size": 15.0,
+  "buffer_font_size": 15.0,
   "theme": {
-    "mode": "system",
+    "mode": "dark",
     "light": "One Light",
-    "dark": "Syntax",
+    "dark": "poimandres blurry",
   },
   "languages": {
     "JavaScript": {
