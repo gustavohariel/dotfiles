@@ -45,6 +45,11 @@
     }
 
     window-rule {
+        match app-id=r#"^org\.gnome\.Nautilus$"#
+        draw-border-with-background false
+    }
+
+    window-rule {
         match app-id=r#"^dev\.zed\.Zed(-Preview)?$"#
         draw-border-with-background false
     }
