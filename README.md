@@ -35,6 +35,7 @@ stow -R -t ~ <package>       # restow (refresh)
 | --- | --- |
 | `bluetooth-fix/` | Realtek RTL8761BU autosuspend + `main.conf` baselines. Install first. |
 | `airpods/` | librepods (AUR) + AirPods-specific `main.conf` + wireplumber + user systemd unit. Depends on `bluetooth-fix`. |
+| `wol/` | Enables Wake-on-LAN (magic packet) on the primary ethernet NIC via NetworkManager. Used with iPhone "Wake Me Up". |
 
 **Other**
 
@@ -47,6 +48,7 @@ paru -S --needed stow
 cd ~/sandbox/dotfiles
 sudo sh bluetooth-fix/install.sh   # only if Realtek/AirPods bluetooth wanted
 sudo sh airpods/install.sh         # depends on bluetooth-fix
+sudo sh wol/install.sh             # only if Wake-on-LAN wanted
 for pkg in nvim zed cursor fish niri noctalia autostart local-bin screencast-nvidia
     stow -t ~ $pkg
 end
