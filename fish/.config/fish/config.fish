@@ -1,10 +1,8 @@
 source /usr/share/cachyos-fish-config/cachyos-config.fish
 
-# overwrite greeting
-# potentially disabling fastfetch
-#function fish_greeting
-#    # smth smth
-#end
+# overwrite greeting (disables fastfetch from cachyos-config.fish)
+function fish_greeting
+end
 export PATH="$HOME/.local/bin:$PATH"
 
 # mise (language version manager)
