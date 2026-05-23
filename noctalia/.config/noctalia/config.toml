@@ -1,0 +1,64 @@
+[bar.default]
+background_opacity = 0.79999995231628418
+center = [ "media" ]
+contact_shadow = true
+end = [ "weather", "tray", "clipboard", "bluetooth", "notifications", "clock" ]
+start = [ "workspaces", "a" ]
+
+[desktop_widgets]
+enabled = false
+
+[shell]
+settings_show_advanced = true
+
+    [shell.panel]
+    control_center_placement = "floating"
+    transparency_mode = "soft"
+
+[theme]
+builtin = "Tokyo-Night"
+custom_palette = "Poimandres"
+source = "custom"
+
+    [theme.templates]
+    builtin_ids = [ "alacritty" ]
+    community_ids = [ "zen-browser", "zed" ]
+    enable_builtin_templates = false
+
+[wallpaper]
+directory = "/home/realgh/Pictures/Wallpapers"
+
+    [wallpaper.default]
+    path = "/home/realgh/Pictures/Wallpapers/WhatsApp Image 2024-08-14 at 16.31.53_a14031d9.jpg"
+
+    [wallpaper.last]
+    path = "/home/realgh/Pictures/Wallpapers/WhatsApp Image 2024-08-14 at 16.31.53_a14031d9.jpg"
+
+    [wallpaper.monitors.DP-1]
+    path = "/home/realgh/Pictures/Wallpapers/WhatsApp Image 2024-08-14 at 16.31.53_a14031d9.jpg"
+
+[weather]
+auto_locate = true
+
+[widget.a]
+length = 0.0
+type = "spacer"
+
+[widget.b]
+type = "custom_button"
+
+[widget.bongocat]
+script = "scripts/bongocat.lua"
+type = "scripted"
+
+[widget.media]
+hide_when_no_media = true
+
+[widget.network]
+show_label = false
+
+[widget.volume]
+show_label = false
+
+[widget.weather]
+show_condition = false
