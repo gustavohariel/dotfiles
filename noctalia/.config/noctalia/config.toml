@@ -51,6 +51,11 @@ type = "custom_button"
 script = "scripts/bongocat.lua"
 type = "scripted"
 
+[widget.hubstaff]
+type = "scripted"
+script = "~/.config/noctalia/scripts/hubstaff.lua"
+hot_reload = true
+
 [widget.media]
 hide_when_no_media = true
 
