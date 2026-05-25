@@ -1,7 +1,7 @@
-function cc --description 'claude --dangerously-skip-permissions, then cd to the worktree it left a breadcrumb in'
+function cc --description 'claude, then cd to the worktree it left a breadcrumb in'
     set -l breadcrumb $HOME/.cache/claude-last-worktree
     rm -f $breadcrumb
-    claude --dangerously-skip-permissions $argv
+    claude $argv
     if test -s $breadcrumb
         set -l wt_path (cat $breadcrumb)
         rm -f $breadcrumb
