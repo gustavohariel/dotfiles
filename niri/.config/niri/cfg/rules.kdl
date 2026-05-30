@@ -54,40 +54,6 @@
         draw-border-with-background false
     }
 
-    // Used by the noctalia-hubstaff plugin: open Hubstaff already in the
-    // floating layout pinned far off-screen, so launching it (via app
-    // launcher or the plugin) never flashes the GUI. The plugin's Open
-    // button moves it back to tiling when you actually want to see it.
-    // Niri clamps positions to keep the window at least partially on-screen,
-    // but the conditional `is-floating=true` rule below makes that sliver
-    // fully transparent.
-    window-rule {
-        match app-id=r#"^Netsoft-com\.netsoft\.hubstaff$"#
-        open-floating true
-        open-focused false
-        default-floating-position x=65000 y=65000 relative-to="top-left"
-    }
-
-    // …so when Hubstaff is floating (i.e. stashed), turn off every visual
-    // layer niri renders for the window. Opacity 0 hides the content; the
-    // border / focus-ring / shadow / background-effect / corner-radius
-    // overrides erase the chrome and the blurred halo that the global rules
-    // would otherwise leave behind. When Open moves it back to tiling, this
-    // rule no longer matches and the global appearance returns.
-    window-rule {
-        match app-id=r#"^Netsoft-com\.netsoft\.hubstaff$"# is-floating=true
-        opacity 0.0
-        border { off; }
-        focus-ring { off; }
-        shadow { off; }
-        background-effect {
-            xray false
-            blur false
-        }
-        clip-to-geometry false
-        geometry-corner-radius 0
-    }
-
     layer-rule {
         match namespace="^noctalia-wallpaper*"
         place-within-backdrop true
