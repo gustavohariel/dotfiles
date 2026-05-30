@@ -19,6 +19,10 @@ if test -f ~/.config/fish/private.fish
     source ~/.config/fish/private.fish
 end
 
+# Android emulator's bundled Qt has no wayland platform plugin; force xcb so it
+# uses XWayland instead of crashing on Niri sessions.
+set -gx QT_QPA_PLATFORM xcb
+
 # Shell integrations
 if type -q fzf
     fzf --fish | source
