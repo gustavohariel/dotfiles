@@ -1,0 +1,5 @@
+# US-International dead-key + c defaults to ć (Polish). Override to ç (pt-BR), Windows-style.
+include "%L"
+
+<dead_acute> <c> : "ç"
+<dead_acute> <C> : "Ç"
