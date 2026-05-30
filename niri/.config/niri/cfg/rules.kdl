@@ -54,18 +54,35 @@
         draw-border-with-background false
     }
 
-    // Android Studio emulator main window: cap the column to the skin's
+    // Android Studio emulator: the phone (title `Android Emulator …`) and
+    // the extended-controls sidebar (title `Emulator`) are two separate
+    // top-level windows sharing `app-id=Emulator`. Cap each to its
     // natural width so tiling doesn't leave a black canvas next to the
-    // phone. The extended-controls toolbar shares `app-id=Emulator` but
-    // differs by title, so the more specific rule below floats it instead.
+    // skin and the sidebar doesn't claim a half-screen column.
     window-rule {
         match app-id="^Emulator$" title=r#"^Android Emulator"#
         default-column-width { fixed 647; }
     }
 
+    // The sidebar's buttons are broken on this Wayland session — hide it
+    // entirely instead of letting it eat a column. Park it far off-screen
+    // (niri clamps to a sliver, hidden via opacity 0 + chrome off) so the
+    // emulator process keeps its second top-level alive without showing.
     window-rule {
         match app-id="^Emulator$" title="^Emulator$"
         open-floating true
+        open-focused false
+        default-floating-position x=65000 y=65000 relative-to="top-left"
+        opacity 0.0
+        border { off; }
+        focus-ring { off; }
+        shadow { off; }
+        background-effect {
+            xray false
+            blur false
+        }
+        clip-to-geometry false
+        geometry-corner-radius 0
     }
 
     layer-rule {
