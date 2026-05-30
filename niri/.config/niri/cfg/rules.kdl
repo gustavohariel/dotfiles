@@ -54,6 +54,20 @@
         draw-border-with-background false
     }
 
+    // Android Studio emulator main window: cap the column to the skin's
+    // natural width so tiling doesn't leave a black canvas next to the
+    // phone. The extended-controls toolbar shares `app-id=Emulator` but
+    // differs by title, so the more specific rule below floats it instead.
+    window-rule {
+        match app-id="^Emulator$" title=r#"^Android Emulator"#
+        default-column-width { fixed 647; }
+    }
+
+    window-rule {
+        match app-id="^Emulator$" title="^Emulator$"
+        open-floating true
+    }
+
     layer-rule {
         match namespace="^noctalia-wallpaper*"
         place-within-backdrop true
