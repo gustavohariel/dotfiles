@@ -1,5 +1,6 @@
 // ────────────── Startup Applications ──────────────
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Miscellaneous#spawn-sh-at-startup
 
-    spawn-sh-at-startup "noctalia -d"
+    // noctalia is managed by the systemd user unit noctalia.service
+    // (Restart=always + OOMScoreAdjust), not spawned here. See dotfiles/noctalia.
     spawn-sh-at-startup "sudo -n /usr/local/bin/_autologin-self"

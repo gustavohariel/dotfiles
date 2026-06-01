@@ -1,0 +1,44 @@
+# target: ~/.config/systemd/user/noctalia.service  (symlinked from dotfiles)
+# Noctalia v5 shell — bar, notifications, launcher, lock screen.
+#
+# Replaces the niri `spawn-sh-at-startup "noctalia -d"` autostart so systemd
+# owns the lifecycle. Background: on 2026-06-01 noctalia went down twice as
+# collateral during system-wide OOM events (a runaway agent process peaked at
+# ~12G RAM + 15G swap); niri's one-shot autostart never brought it back.
+#
+#   * Restart=always   — the shell self-heals within seconds if it is ever
+#                        killed (OOM collateral, etc.).
+#   * OOMScoreAdjust    — lowers kill priority. An unprivileged user service
+#                        cannot drop below the user-manager floor
+#                        (oom_score_adj=100 on this box) without
+#                        CAP_SYS_RESOURCE, so -1000 clamps to 100 — still half
+#                        of niri's spawn default of 200. systemd applies the
+#                        lowest permitted value and does not fail the unit.
+#   * ManagedOOMPreference=avoid — asks systemd-oomd (active here) to spare it
+#                        too, covering the swap-pressure kill path.
+#
+# Runs noctalia in the FOREGROUND (no -d): systemd does the backgrounding and
+# tracks the real PID. `-d/--daemon` forks and detaches, which breaks
+# Type=simple. The IPC socket is unchanged, so `noctalia msg ...` keybinds
+# keep working.
+
+[Unit]
+Description=Noctalia shell (bar, notifications, launcher) for Wayland
+Documentation=https://docs.noctalia.dev
+After=graphical-session.target
+PartOf=graphical-session.target
+# Forgiving restart budget: ride out a burst of kills during a memory storm,
+# but still give up on a genuine startup crash-loop.
+StartLimitIntervalSec=60
+StartLimitBurst=10
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/noctalia
+Restart=always
+RestartSec=2
+OOMScoreAdjust=-1000
+ManagedOOMPreference=avoid
+
+[Install]
+WantedBy=graphical-session.target
