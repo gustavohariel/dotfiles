@@ -69,6 +69,18 @@ function renameWorktreeDirectory(checkoutPath, newName, repoRoot) {
     }
     fs.writeFileSync(sessionPath, JSON.stringify(session, null, 2) + "\n", "utf8")
   } catch {}
+
+  updateOpencodeWorktreePath(checkoutPath, newPath)
+}
+
+function updateOpencodeWorktreePath(oldPath, newPath) {
+  const escape = s => s.replace(/'/g, "''")
+  try {
+    execFileSync("opencode", [
+      "db",
+      `UPDATE project_directory SET directory = '${escape(newPath)}' WHERE directory = '${escape(oldPath)}' AND type = 'git_worktree'`,
+    ], { timeout: 5000, stdio: "pipe" })
+  } catch {}
 }
 
 function getSessionTitle() {
