@@ -1,4 +1,6 @@
-import { execFileSync } from "child_process"
+import { execFile, execFileSync } from "child_process"
+import path from "path"
+import fs from "fs"
 
 function herdr(args) {
   return execFileSync("herdr", args, {
@@ -28,6 +30,18 @@ function renameTab(id, label) {
   try { herdr(["tab", "rename", id, label.slice(0, 60)]) } catch {}
 }
 
+function renameWorktreeDirectory(checkoutPath, newName, repoRoot) {
+  const parentDir = path.dirname(checkoutPath)
+  const newPath = path.join(parentDir, newName)
+  if (newPath === checkoutPath) return
+
+  execFileSync("mv", [checkoutPath, newPath], { timeout: 5000, stdio: "pipe" })
+
+  const worktreeId = path.basename(checkoutPath)
+  const gitdirFile = path.join(repoRoot, ".git", "worktrees", worktreeId, "gitdir")
+  fs.writeFileSync(gitdirFile, `${newPath}/.git\n`, "utf8")
+}
+
 function getSessionTitle() {
   const out = opencode(["session", "list"])
   const lines = out.split("\n").filter((l) => l.startsWith("ses_"))
@@ -45,46 +59,55 @@ function getSessionTitle() {
 function extractNameHeuristic(text) {
   const cleaned = text
     .replace(/^(can you|please|i need|i want|help me|let's|lets)\s+/i, "")
+    .replace(/^new session[^a-z].*/i, "task")
+    .replace(/^opencode\s+/i, "")
     .replace(/https?:\/\/\S+/g, "")
-    .replace(/[^a-z0-9\s-]/gi, "")
+    .replace(/-+/g, " ")
+    .replace(/[^a-z0-9\s]/gi, "")
     .trim()
     .split(/\s+/)
-    .filter((w) => w.length > 2)
-    .slice(0, 4)
+    .filter((w) => w.length > 2 && !/^(opencode|with|from|this|that|the|and|for|discussion)$/i.test(w))
+    .slice(0, 3)
     .join("-")
     .toLowerCase()
 
-  return cleaned.length > 60 ? cleaned.slice(0, 60) : cleaned || "task"
+  return cleaned || "task"
 }
 
-function generateNameViaAI(prompt) {
+async function generateNameViaAI(prompt) {
   const task = prompt.slice(0, 300).replace(/"/g, "'")
-  const result = execFileSync(
-    "opencode",
-    [
-      "run",
-      "--format",
-      "json",
-      `generate a short 2-3 word name for this task: ${task}. respond with only the name, lowercase, hyphenated, max 25 chars. no explanation.`,
-    ],
-    {
-      encoding: "utf8",
-      timeout: 30000,
-      stdio: ["pipe", "pipe", "pipe"],
-    },
-  )
-
-  for (const line of result.split("\n")) {
-    try {
-      const parsed = JSON.parse(line)
-      if (parsed.type === "text" && parsed.part?.type === "text") {
-        const name = parsed.part.text.trim().toLowerCase()
-        if (/^[a-z0-9][a-z0-9-]{1,23}[a-z0-9]$/.test(name)) return name
-      }
-    } catch {}
-  }
-
-  return null
+  return new Promise((resolve) => {
+    const child = execFile(
+      "opencode",
+      [
+        "run",
+        "--pure",
+        "-m", "opencode/big-pickle",
+        "--format",
+        "json",
+        `generate a short 2-3 word name for this task: ${task}. respond with only the name, lowercase, hyphenated, max 25 chars. no explanation.`,
+      ],
+      {
+        encoding: "utf8",
+        timeout: 30000,
+        stdio: ["pipe", "pipe", "pipe"],
+        env: { ...process.env, OPENCODE: "", OPENCODE_PID: "", OPENCODE_PROCESS_ROLE: "", OPENCODE_RUN_ID: "" },
+      },
+      (err, stdout) => {
+        if (err) return resolve(null)
+        for (const line of stdout.split("\n")) {
+          try {
+            const parsed = JSON.parse(line)
+            if (parsed.type === "text" && parsed.part?.type === "text") {
+              const name = parsed.part.text.trim().toLowerCase()
+              if (/^[a-z0-9][a-z0-9-]{1,23}[a-z0-9]$/.test(name)) return resolve(name)
+            }
+          } catch {}
+        }
+        resolve(null)
+      },
+    )
+  })
 }
 
 export default async () => {
@@ -108,17 +131,15 @@ export default async () => {
 
         renameTab(ws.active_tab_id, `OC | ${sessionTitle}`)
 
-        let wsName = null
+        let wsName = extractNameHeuristic(sessionTitle)
         try {
-          wsName = generateNameViaAI(sessionTitle)
+          const aiName = await generateNameViaAI(sessionTitle)
+          if (aiName) wsName = aiName
         } catch {}
-
-        if (!wsName) {
-          wsName = extractNameHeuristic(sessionTitle)
-        }
 
         renameWorkspace(ws.workspace_id, wsName)
         renamePane(ws.workspace_id + "-1", wsName)
+        renameWorktreeDirectory(ws.worktree.checkout_path, wsName, ws.worktree.repo_root)
       } catch {}
     },
   }
