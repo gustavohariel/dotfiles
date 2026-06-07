@@ -1,4 +1,4 @@
-import { execFile, execFileSync } from "child_process"
+import { execFileSync } from "child_process"
 
 function herdr(args) {
   return execFileSync("herdr", args, {
@@ -60,42 +60,6 @@ function extractNameHeuristic(text) {
   return cleaned || "task"
 }
 
-async function generateNameViaAI(prompt) {
-  const task = prompt.slice(0, 300).replace(/"/g, "'")
-  return new Promise((resolve) => {
-    const child = execFile(
-      "opencode",
-      [
-        "run",
-        "--pure",
-        "-m", "opencode/big-pickle",
-        "--format",
-        "json",
-        `generate a short 2-3 word name for this task: ${task}. respond with only the name, lowercase, hyphenated, max 25 chars. no explanation.`,
-      ],
-      {
-        encoding: "utf8",
-        timeout: 30000,
-        stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, OPENCODE: "", OPENCODE_PID: "", OPENCODE_PROCESS_ROLE: "", OPENCODE_RUN_ID: "" },
-      },
-      (err, stdout) => {
-        if (err) return resolve(null)
-        for (const line of stdout.split("\n")) {
-          try {
-            const parsed = JSON.parse(line)
-            if (parsed.type === "text" && parsed.part?.type === "text") {
-              const name = parsed.part.text.trim().toLowerCase()
-              if (/^[a-z0-9][a-z0-9-]{1,23}[a-z0-9]$/.test(name)) return resolve(name)
-            }
-          } catch {}
-        }
-        resolve(null)
-      },
-    )
-  })
-}
-
 export default async () => {
   let done = false
 
@@ -114,19 +78,11 @@ export default async () => {
         const sessionTitle = getSessionTitle()
         if (!sessionTitle) return
 
-        let wsName = extractNameHeuristic(sessionTitle)
+        const wsName = extractNameHeuristic(sessionTitle)
 
-        renameTab(ws.active_tab_id, `OC | ${sessionTitle}`)
+        renameTab(ws.active_tab_id, "opencode")
         renameWorkspace(ws.workspace_id, wsName)
         renamePane(ws.workspace_id + "-1", wsName)
-
-        try {
-          const aiName = await generateNameViaAI(sessionTitle)
-          if (aiName && aiName !== wsName) {
-            renameWorkspace(ws.workspace_id, aiName)
-            renamePane(ws.workspace_id + "-1", aiName)
-          }
-        } catch {}
 
         done = true
       } catch {}
