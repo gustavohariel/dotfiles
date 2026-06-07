@@ -31,12 +31,25 @@ function renameTab(id, label) {
   try { herdr(["tab", "rename", id, label.slice(0, 60)]) } catch {}
 }
 
+function getActualWorktreeId(checkoutPath) {
+  try {
+    const gitFile = fs.readFileSync(path.join(checkoutPath, ".git"), "utf8").trim()
+    const match = gitFile.match(/^gitdir:\s+(.+)$/m)
+    if (match) {
+      const gitdirPath = match[1]
+      const idx = gitdirPath.lastIndexOf("/worktrees/")
+      if (idx !== -1) return gitdirPath.slice(idx + "/worktrees/".length)
+    }
+  } catch {}
+  return path.basename(checkoutPath)
+}
+
 function renameWorktreeDirectory(checkoutPath, newName, repoRoot) {
   const parentDir = path.dirname(checkoutPath)
   const newPath = path.join(parentDir, newName)
   if (newPath === checkoutPath) return
 
-  const worktreeId = path.basename(checkoutPath)
+  const worktreeId = getActualWorktreeId(checkoutPath)
   const gitWorktreesDir = path.join(repoRoot, ".git", "worktrees")
   const newId = path.basename(newPath)
 
