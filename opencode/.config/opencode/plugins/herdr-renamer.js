@@ -1,7 +1,4 @@
 import { execFile, execFileSync } from "child_process"
-import path from "path"
-import fs from "fs"
-import os from "os"
 
 function herdr(args) {
   return execFileSync("herdr", args, {
@@ -29,84 +26,6 @@ function renamePane(id, label) {
 
 function renameTab(id, label) {
   try { herdr(["tab", "rename", id, label.slice(0, 60)]) } catch {}
-}
-
-function getActualWorktreeId(checkoutPath, repoRoot) {
-  if (repoRoot) {
-    try {
-      const worktreesDir = path.join(repoRoot, ".git", "worktrees")
-      const entries = fs.readdirSync(worktreesDir)
-      for (const entry of entries) {
-        try {
-          const target = fs.readFileSync(path.join(worktreesDir, entry, "gitdir"), "utf8").trim()
-          if (target === `${checkoutPath}/.git`) return entry
-        } catch {}
-      }
-    } catch {}
-  }
-
-  try {
-    const gitFile = fs.readFileSync(path.join(checkoutPath, ".git"), "utf8").trim()
-    const match = gitFile.match(/^gitdir:\s+(.+)$/m)
-    if (match) {
-      const gitdirPath = match[1]
-      const idx = gitdirPath.lastIndexOf("/worktrees/")
-      if (idx !== -1) return gitdirPath.slice(idx + "/worktrees/".length)
-    }
-  } catch {}
-  return path.basename(checkoutPath)
-}
-
-function renameWorktreeDirectory(checkoutPath, newName, repoRoot) {
-  const parentDir = path.dirname(checkoutPath)
-  const newPath = path.join(parentDir, newName)
-  if (newPath === checkoutPath) return
-
-  const worktreeId = getActualWorktreeId(checkoutPath, repoRoot)
-  const gitWorktreesDir = path.join(repoRoot, ".git", "worktrees")
-  const newId = path.basename(newPath)
-
-  execFileSync("mv", [checkoutPath, newPath], { timeout: 5000, stdio: "pipe" })
-
-  fs.writeFileSync(
-    path.join(gitWorktreesDir, worktreeId, "gitdir"),
-    `${newPath}/.git\n`,
-    "utf8",
-  )
-
-  fs.writeFileSync(
-    path.join(newPath, ".git"),
-    `gitdir: ${path.join(gitWorktreesDir, newId)}\n`,
-    "utf8",
-  )
-
-  execFileSync("mv", [
-    path.join(gitWorktreesDir, worktreeId),
-    path.join(gitWorktreesDir, newId),
-  ], { timeout: 5000, stdio: "pipe" })
-
-  try {
-    const sessionPath = path.join(os.homedir(), ".config", "herdr", "session.json")
-    const session = JSON.parse(fs.readFileSync(sessionPath, "utf8"))
-    for (const ws of session.workspaces) {
-      if (ws.worktree_space?.checkout_path === checkoutPath) {
-        ws.worktree_space.checkout_path = newPath
-      }
-    }
-    fs.writeFileSync(sessionPath, JSON.stringify(session, null, 2) + "\n", "utf8")
-  } catch {}
-
-  updateOpencodeWorktreePath(checkoutPath, newPath)
-}
-
-function updateOpencodeWorktreePath(oldPath, newPath) {
-  const escape = s => s.replace(/'/g, "''")
-  try {
-    execFileSync("opencode", [
-      "db",
-      `UPDATE project_directory SET directory = '${escape(newPath)}' WHERE directory = '${escape(oldPath)}' AND type = 'git_worktree'`,
-    ], { timeout: 5000, stdio: "pipe" })
-  } catch {}
 }
 
 function getSessionTitle() {
@@ -195,17 +114,15 @@ export default async () => {
         const sessionTitle = getSessionTitle()
         if (!sessionTitle) return
 
-        renameTab(ws.active_tab_id, `OC | ${sessionTitle}`)
-
         let wsName = extractNameHeuristic(sessionTitle)
         try {
           const aiName = await generateNameViaAI(sessionTitle)
           if (aiName) wsName = aiName
         } catch {}
 
+        renameTab(ws.active_tab_id, `OC | ${sessionTitle}`)
         renameWorkspace(ws.workspace_id, wsName)
         renamePane(ws.workspace_id + "-1", wsName)
-        renameWorktreeDirectory(ws.worktree.checkout_path, wsName, ws.worktree.repo_root)
 
         done = true
       } catch {}
