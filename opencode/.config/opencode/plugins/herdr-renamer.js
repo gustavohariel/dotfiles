@@ -68,6 +68,7 @@ async function generateNameViaAI(prompt) {
       [
         "run",
         "--pure",
+        "-m", "opencode/big-pickle",
         "--format",
         "json",
         `generate a short 2-3 word name for this task: ${task}. respond with only the name, lowercase, hyphenated, max 25 chars. no explanation.`,
