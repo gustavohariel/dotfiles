@@ -8,16 +8,38 @@ function herdr(args) {
   })
 }
 
+function opencode(args) {
+  return execFileSync("opencode", args, {
+    encoding: "utf8",
+    timeout: 15000,
+    stdio: ["pipe", "pipe", "ignore"],
+  })
+}
+
 function renameWorkspace(id, label) {
-  try { herdr(["workspace", "rename", id, label]) } catch {}
+  try { herdr(["workspace", "rename", id, label.slice(0, 60)]) } catch {}
 }
 
 function renamePane(id, label) {
-  try { herdr(["pane", "rename", id, label]) } catch {}
+  try { herdr(["pane", "rename", id, label.slice(0, 60)]) } catch {}
 }
 
 function renameTab(id, label) {
-  try { herdr(["tab", "rename", id, label]) } catch {}
+  try { herdr(["tab", "rename", id, label.slice(0, 60)]) } catch {}
+}
+
+function getSessionTitle() {
+  const out = opencode(["session", "list"])
+  const lines = out.split("\n").filter((l) => l.startsWith("ses_"))
+  if (!lines.length) return null
+
+  const line = lines[0]
+  const sessionId = line.match(/^(ses_[a-zA-Z0-9]+)\s{2,}/)?.[1]
+  if (!sessionId) return null
+
+  const rest = line.slice(sessionId.length).trimStart()
+  const title = rest.replace(/\s{2,}.*$/, "").trim()
+  return title || null
 }
 
 function extractNameHeuristic(text) {
@@ -35,57 +57,14 @@ function extractNameHeuristic(text) {
   return cleaned.length > 60 ? cleaned.slice(0, 60) : cleaned || "task"
 }
 
-function generateNameViaAI(prompt) {
-  const task = prompt.slice(0, 300).replace(/"/g, "'")
-  const result = execFileSync(
-    "opencode",
-    [
-      "run",
-      "--format",
-      "json",
-      `generate a short 2-3 word name for this task: ${task}. respond with only the name, lowercase, hyphenated, max 25 chars. no explanation.`,
-    ],
-    {
-      encoding: "utf8",
-      timeout: 30000,
-      stdio: ["pipe", "pipe", "pipe"],
-    },
-  )
-
-  for (const line of result.split("\n")) {
-    try {
-      const parsed = JSON.parse(line)
-      if (parsed.type === "text" && parsed.part?.type === "text") {
-        const name = parsed.part.text.trim().toLowerCase()
-        if (/^[a-z0-9][a-z0-9-]{1,23}[a-z0-9]$/.test(name)) return name
-      }
-    } catch {}
-  }
-
-  return null
-}
-
 export default async () => {
   let done = false
-  let pendingName = null
 
   return {
-    chat: {
-      params: async (input) => {
-        if (done) return
-        const messages = input?.messages ?? []
-        const last = messages[messages.length - 1]
-        if (last?.role !== "user" || !last?.content) return
-
-        const text = typeof last.content === "string" ? last.content : ""
-        pendingName = extractNameHeuristic(text)
-      },
-    },
-
     event: async (input) => {
-      if (done || !pendingName) return
+      if (done) return
       const type = input?.event?.type
-      if (type !== "session.idle" && type !== "session.status") return
+      if (type !== "session.idle") return
       done = true
 
       try {
@@ -94,18 +73,27 @@ export default async () => {
         const ws = workspaces.find((w) => w.worktree?.is_linked_worktree && w.focused)
         if (!ws?.worktree) return
 
-        const taskMsg = pendingName
+        let tabTitle = null
+        let paneTitle = null
 
-        let name = null
         try {
-          name = generateNameViaAI(taskMsg)
+          tabTitle = getSessionTitle()
         } catch {}
 
-        const finalName = name || pendingName
+        if (tabTitle) {
+          paneTitle = tabTitle
+        } else {
+          paneTitle = "dotfiles"
+        }
 
-        renameWorkspace(ws.workspace_id, finalName)
-        renamePane(ws.workspace_id + "-1", finalName)
-        renameTab(ws.active_tab_id, finalName)
+        if (tabTitle) {
+          renameTab(ws.active_tab_id, `OC | ${tabTitle}`)
+        }
+
+        if (paneTitle) {
+          renameWorkspace(ws.workspace_id, paneTitle)
+          renamePane(ws.workspace_id + "-1", paneTitle)
+        }
       } catch {}
     },
   }
