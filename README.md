@@ -27,6 +27,7 @@ stow -R -t ~ <package>       # restow (refresh)
 | `noctalia/` | `~/.config/noctalia/` | excludes `plugins/hubstaff/` (own repo) |
 | `autostart/` | `~/.config/autostart/` | bitwarden, electron, librepods .desktop entries |
 | `local-bin/` | `~/.local/bin/` | `display-desk`, `display-tv` (niri output switching) |
+| `herdr/` | `~/.config/herdr/` | config.toml — TUI theme, worktrees dir, experimental features |
 | `screencast-nvidia/` | `~/.config/xdg-desktop-portal/`, `~/.config/systemd/user/xdg-desktop-portal-gnome.service.d/` | NVIDIA+Wayland screencast workaround (wlr portal + `GSK_RENDERER=gl`) |
 
 **Script-installed packages** — touch `/etc` too, so stow is the wrong tool. Deploy with `sudo sh <pkg>/install.sh`. Idempotent.
@@ -49,7 +50,7 @@ cd ~/sandbox/dotfiles
 sudo sh bluetooth-fix/install.sh   # only if Realtek/AirPods bluetooth wanted
 sudo sh airpods/install.sh         # depends on bluetooth-fix
 sudo sh wol/install.sh             # only if Wake-on-LAN wanted
-for pkg in nvim zed cursor fish niri noctalia autostart local-bin screencast-nvidia
+for pkg in nvim zed cursor fish niri noctalia autostart local-bin screencast-nvidia herdr
     stow -t ~ $pkg
 end
 ```
