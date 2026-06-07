@@ -42,24 +42,6 @@ function getSessionTitle() {
   return title || null
 }
 
-function extractNameHeuristic(text) {
-  const cleaned = text
-    .replace(/^(can you|please|i need|i want|help me|let's|lets)\s+/i, "")
-    .replace(/^new session[^a-z].*/i, "task")
-    .replace(/^opencode\s+/i, "")
-    .replace(/https?:\/\/\S+/g, "")
-    .replace(/-+/g, " ")
-    .replace(/[^a-z0-9\s]/gi, "")
-    .trim()
-    .split(/\s+/)
-    .filter((w) => w.length > 2 && !/^(opencode|with|from|this|that|the|and|for|discussion)$/i.test(w))
-    .slice(0, 3)
-    .join("-")
-    .toLowerCase()
-
-  return cleaned || "task"
-}
-
 export default async () => {
   let done = false
 
@@ -78,11 +60,9 @@ export default async () => {
         const sessionTitle = getSessionTitle()
         if (!sessionTitle) return
 
-        const wsName = extractNameHeuristic(sessionTitle)
-
         renameTab(ws.active_tab_id, "opencode")
-        renameWorkspace(ws.workspace_id, wsName)
-        renamePane(ws.workspace_id + "-1", wsName)
+        renameWorkspace(ws.workspace_id, sessionTitle)
+        renamePane(ws.workspace_id + "-1", sessionTitle)
 
         done = true
       } catch {}
