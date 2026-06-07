@@ -115,14 +115,18 @@ export default async () => {
         if (!sessionTitle) return
 
         let wsName = extractNameHeuristic(sessionTitle)
-        try {
-          const aiName = await generateNameViaAI(sessionTitle)
-          if (aiName) wsName = aiName
-        } catch {}
 
         renameTab(ws.active_tab_id, `OC | ${sessionTitle}`)
         renameWorkspace(ws.workspace_id, wsName)
         renamePane(ws.workspace_id + "-1", wsName)
+
+        try {
+          const aiName = await generateNameViaAI(sessionTitle)
+          if (aiName && aiName !== wsName) {
+            renameWorkspace(ws.workspace_id, aiName)
+            renamePane(ws.workspace_id + "-1", aiName)
+          }
+        } catch {}
 
         done = true
       } catch {}
