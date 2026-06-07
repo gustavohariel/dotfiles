@@ -31,7 +31,20 @@ function renameTab(id, label) {
   try { herdr(["tab", "rename", id, label.slice(0, 60)]) } catch {}
 }
 
-function getActualWorktreeId(checkoutPath) {
+function getActualWorktreeId(checkoutPath, repoRoot) {
+  if (repoRoot) {
+    try {
+      const worktreesDir = path.join(repoRoot, ".git", "worktrees")
+      const entries = fs.readdirSync(worktreesDir)
+      for (const entry of entries) {
+        try {
+          const target = fs.readFileSync(path.join(worktreesDir, entry, "gitdir"), "utf8").trim()
+          if (target === `${checkoutPath}/.git`) return entry
+        } catch {}
+      }
+    } catch {}
+  }
+
   try {
     const gitFile = fs.readFileSync(path.join(checkoutPath, ".git"), "utf8").trim()
     const match = gitFile.match(/^gitdir:\s+(.+)$/m)
@@ -49,7 +62,7 @@ function renameWorktreeDirectory(checkoutPath, newName, repoRoot) {
   const newPath = path.join(parentDir, newName)
   if (newPath === checkoutPath) return
 
-  const worktreeId = getActualWorktreeId(checkoutPath)
+  const worktreeId = getActualWorktreeId(checkoutPath, repoRoot)
   const gitWorktreesDir = path.join(repoRoot, ".git", "worktrees")
   const newId = path.basename(newPath)
 
