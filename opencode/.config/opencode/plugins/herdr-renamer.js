@@ -172,7 +172,6 @@ export default async () => {
       if (done) return
       const type = input?.event?.type
       if (type !== "session.idle") return
-      done = true
 
       try {
         const raw = JSON.parse(herdr(["workspace", "list"]))
@@ -194,6 +193,8 @@ export default async () => {
         renameWorkspace(ws.workspace_id, wsName)
         renamePane(ws.workspace_id + "-1", wsName)
         renameWorktreeDirectory(ws.worktree.checkout_path, wsName, ws.worktree.repo_root)
+
+        done = true
       } catch {}
     },
   }
