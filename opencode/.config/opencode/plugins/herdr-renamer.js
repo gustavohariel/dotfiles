@@ -1,4 +1,6 @@
 import { execFile, execFileSync } from "child_process"
+import path from "path"
+import fs from "fs"
 
 function herdr(args) {
   return execFileSync("herdr", args, {
@@ -26,6 +28,18 @@ function renamePane(id, label) {
 
 function renameTab(id, label) {
   try { herdr(["tab", "rename", id, label.slice(0, 60)]) } catch {}
+}
+
+function renameWorktreeDirectory(checkoutPath, newName, repoRoot) {
+  const parentDir = path.dirname(checkoutPath)
+  const newPath = path.join(parentDir, newName)
+  if (newPath === checkoutPath) return
+
+  execFileSync("mv", [checkoutPath, newPath], { timeout: 5000, stdio: "pipe" })
+
+  const worktreeId = path.basename(checkoutPath)
+  const gitdirFile = path.join(repoRoot, ".git", "worktrees", worktreeId, "gitdir")
+  fs.writeFileSync(gitdirFile, `${newPath}/.git\n`, "utf8")
 }
 
 function getSessionTitle() {
@@ -125,6 +139,7 @@ export default async () => {
 
         renameWorkspace(ws.workspace_id, wsName)
         renamePane(ws.workspace_id + "-1", wsName)
+        renameWorktreeDirectory(ws.worktree.checkout_path, wsName, ws.worktree.repo_root)
       } catch {}
     },
   }
