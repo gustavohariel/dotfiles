@@ -20,7 +20,7 @@ function renameTab(id, label) {
   try { herdr(["tab", "rename", id, label]) } catch {}
 }
 
-function extractName(text) {
+function extractNameHeuristic(text) {
   const cleaned = text
     .replace(/^(can you|please|i need|i want|help me|let's|lets)\s+/i, "")
     .replace(/https?:\/\/\S+/g, "")
@@ -32,7 +32,37 @@ function extractName(text) {
     .join("-")
     .toLowerCase()
 
-  return cleaned.length > 60 ? cleaned.slice(0, 60) : cleaned
+  return cleaned.length > 60 ? cleaned.slice(0, 60) : cleaned || "task"
+}
+
+function generateNameViaAI(prompt) {
+  const task = prompt.slice(0, 300).replace(/"/g, "'")
+  const result = execFileSync(
+    "opencode",
+    [
+      "run",
+      "--format",
+      "json",
+      `generate a short 2-3 word name for this task: ${task}. respond with only the name, lowercase, hyphenated, max 25 chars. no explanation.`,
+    ],
+    {
+      encoding: "utf8",
+      timeout: 30000,
+      stdio: ["pipe", "pipe", "pipe"],
+    },
+  )
+
+  for (const line of result.split("\n")) {
+    try {
+      const parsed = JSON.parse(line)
+      if (parsed.type === "text" && parsed.part?.type === "text") {
+        const name = parsed.part.text.trim().toLowerCase()
+        if (/^[a-z0-9][a-z0-9-]{1,23}[a-z0-9]$/.test(name)) return name
+      }
+    } catch {}
+  }
+
+  return null
 }
 
 export default async () => {
@@ -48,7 +78,7 @@ export default async () => {
         if (last?.role !== "user" || !last?.content) return
 
         const text = typeof last.content === "string" ? last.content : ""
-        pendingName = extractName(text)
+        pendingName = extractNameHeuristic(text)
       },
     },
 
@@ -64,9 +94,18 @@ export default async () => {
         const ws = workspaces.find((w) => w.worktree?.is_linked_worktree && w.focused)
         if (!ws?.worktree) return
 
-        renameWorkspace(ws.workspace_id, pendingName)
-        renamePane(ws.workspace_id + "-1", pendingName)
-        renameTab(ws.active_tab_id, pendingName)
+        const taskMsg = pendingName
+
+        let name = null
+        try {
+          name = generateNameViaAI(taskMsg)
+        } catch {}
+
+        const finalName = name || pendingName
+
+        renameWorkspace(ws.workspace_id, finalName)
+        renamePane(ws.workspace_id + "-1", finalName)
+        renameTab(ws.active_tab_id, finalName)
       } catch {}
     },
   }
