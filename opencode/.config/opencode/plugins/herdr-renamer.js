@@ -1,6 +1,7 @@
 import { execFile, execFileSync } from "child_process"
 import path from "path"
 import fs from "fs"
+import os from "os"
 
 function herdr(args) {
   return execFileSync("herdr", args, {
@@ -35,11 +36,39 @@ function renameWorktreeDirectory(checkoutPath, newName, repoRoot) {
   const newPath = path.join(parentDir, newName)
   if (newPath === checkoutPath) return
 
+  const worktreeId = path.basename(checkoutPath)
+  const gitWorktreesDir = path.join(repoRoot, ".git", "worktrees")
+  const newId = path.basename(newPath)
+
   execFileSync("mv", [checkoutPath, newPath], { timeout: 5000, stdio: "pipe" })
 
-  const worktreeId = path.basename(checkoutPath)
-  const gitdirFile = path.join(repoRoot, ".git", "worktrees", worktreeId, "gitdir")
-  fs.writeFileSync(gitdirFile, `${newPath}/.git\n`, "utf8")
+  fs.writeFileSync(
+    path.join(gitWorktreesDir, worktreeId, "gitdir"),
+    `${newPath}/.git\n`,
+    "utf8",
+  )
+
+  fs.writeFileSync(
+    path.join(newPath, ".git"),
+    `gitdir: ${path.join(gitWorktreesDir, newId)}\n`,
+    "utf8",
+  )
+
+  execFileSync("mv", [
+    path.join(gitWorktreesDir, worktreeId),
+    path.join(gitWorktreesDir, newId),
+  ], { timeout: 5000, stdio: "pipe" })
+
+  try {
+    const sessionPath = path.join(os.homedir(), ".config", "herdr", "session.json")
+    const session = JSON.parse(fs.readFileSync(sessionPath, "utf8"))
+    for (const ws of session.workspaces) {
+      if (ws.worktree_space?.checkout_path === checkoutPath) {
+        ws.worktree_space.checkout_path = newPath
+      }
+    }
+    fs.writeFileSync(sessionPath, JSON.stringify(session, null, 2) + "\n", "utf8")
+  } catch {}
 }
 
 function getSessionTitle() {
