@@ -1,0 +1,20 @@
+lastChangelogVersion: 15.7.5
+providers: 
+  webSearch: auto
+symbolPreset: unicode
+theme: 
+  dark: dark-poimandres
+setupVersion: 1
+modelRoles: 
+  default: openai-codex/gpt-5.5:medium
+memory: 
+  backend: local
+readLineNumbers: true
+lsp: 
+  formatOnWrite: true
+inspect_image: 
+  enabled: true
+github: 
+  enabled: true
+hideThinkingBlock: true
+defaultThinkingLevel: auto
