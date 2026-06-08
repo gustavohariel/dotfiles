@@ -3,5 +3,8 @@
   "private": true,
   "dependencies": {
     "pi-mono-figma": "^0.2.2"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-tui": "^0.79.0"
   }
 }
