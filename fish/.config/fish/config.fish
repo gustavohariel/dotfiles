@@ -5,6 +5,9 @@ function fish_greeting
 end
 export PATH="$HOME/.local/bin:$PATH"
 
+# Codex CLI
+set -gx CODEX_CLI_PATH ~/.codex/packages/standalone/releases/0.136.0-x86_64-unknown-linux-musl/bin/codex
+
 # mise (language version manager)
 ~/.local/bin/mise activate fish | source
 
