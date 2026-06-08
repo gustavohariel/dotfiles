@@ -28,6 +28,7 @@ stow -R -t ~ <package>       # restow (refresh)
 | `autostart/` | `~/.config/autostart/` | bitwarden, electron, librepods .desktop entries |
 | `local-bin/` | `~/.local/bin/` | `display-desk`, `display-tv` (niri output switching) |
 | `screencast-nvidia/` | `~/.config/xdg-desktop-portal/`, `~/.config/systemd/user/xdg-desktop-portal-gnome.service.d/` | NVIDIA+Wayland screencast workaround (wlr portal + `GSK_RENDERER=gl`) |
+| `omp/` | `~/.omp/agent/`, `~/.omp/plugins/package*.json` | Oh My Pi config plus plugin manifests; run `npm install` in `~/.omp/plugins` after stowing |
 
 **Script-installed packages** — touch `/etc` too, so stow is the wrong tool. Deploy with `sudo sh <pkg>/install.sh`. Idempotent.
 
@@ -49,9 +50,11 @@ cd ~/sandbox/dotfiles
 sudo sh bluetooth-fix/install.sh   # only if Realtek/AirPods bluetooth wanted
 sudo sh airpods/install.sh         # depends on bluetooth-fix
 sudo sh wol/install.sh             # only if Wake-on-LAN wanted
-for pkg in nvim zed cursor fish niri noctalia autostart local-bin screencast-nvidia
+for pkg in nvim zed cursor fish niri noctalia autostart local-bin screencast-nvidia omp
     stow -t ~ $pkg
 end
+cd ~/.omp/plugins
+npm install
 ```
 
 Skip packages that don't apply (e.g. `screencast-nvidia` is only useful on NVIDIA+Wayland; `cursor` only if Cursor is installed).

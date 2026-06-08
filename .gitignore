@@ -10,6 +10,10 @@
 fish_variables
 private.fish
 
+# OMP plugin installs are regenerated from the tracked manifests.
+omp/.omp/plugins/node_modules/
+omp/.omp/plugins/cache/
+
 # Noctalia hubstaff plugin lives in its own repo (~/sandbox/noctalia-hubstaff)
 # and is symlinked into ~/.config/noctalia/plugins/ at runtime — don't capture here.
 noctalia/.config/noctalia/plugins/hubstaff/
