@@ -1,4 +1,4 @@
-lastChangelogVersion: 15.10.5
+lastChangelogVersion: 15.10.8
 providers: 
   webSearch: auto
 symbolPreset: unicode
@@ -6,7 +6,7 @@ theme:
   dark: dark-poimandres
 setupVersion: 1
 modelRoles: 
-  default: openai-codex/gpt-5.5:medium
+  default: openai-codex/gpt-5.5
 memory: 
   backend: local
 readLineNumbers: true
@@ -18,3 +18,5 @@ github:
   enabled: true
 hideThinkingBlock: true
 defaultThinkingLevel: auto
+task: 
+  eager: true
