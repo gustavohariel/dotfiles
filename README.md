@@ -28,7 +28,7 @@ stow -R -t ~ <package>       # restow (refresh)
 | `autostart/` | `~/.config/autostart/` | bitwarden, electron, librepods .desktop entries |
 | `local-bin/` | `~/.local/bin/` | `display-desk`, `display-tv` (niri output switching) |
 | `screencast-nvidia/` | `~/.config/xdg-desktop-portal/`, `~/.config/systemd/user/xdg-desktop-portal-gnome.service.d/` | NVIDIA+Wayland screencast workaround (wlr portal + `GSK_RENDERER=gl`) |
-| `omp/` | `~/.omp/agent/`, `~/.omp/plugins/package*.json` | Oh My Pi config plus plugin manifests; run `npm install` in `~/.omp/plugins` after stowing |
+| `omp/` | `~/.omp/agent/`, `~/.omp/agent/skills/`, `~/.omp/plugins/package*.json` | Oh My Pi config, OMP skills, plus plugin manifests; run `npm install` in `~/.omp/plugins` after stowing |
 
 **Script-installed packages** — touch `/etc` too, so stow is the wrong tool. Deploy with `sudo sh <pkg>/install.sh`. Idempotent.
 
