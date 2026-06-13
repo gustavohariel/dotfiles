@@ -2,7 +2,7 @@ providers:
   webSearch: auto
 symbolPreset: unicode
 theme: 
-  dark: dark-poimandres
+  dark: titanium
 setupVersion: 1
 modelRoles: 
   default: openai-codex/gpt-5.5
