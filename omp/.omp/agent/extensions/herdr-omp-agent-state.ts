@@ -21,25 +21,23 @@ function sendRequest(request: unknown): Promise<void> {
     return Promise.resolve();
   }
 
-  const { promise, resolve } = Promise.withResolvers<void>();
-  let done = false;
-  const socket = createConnection(socketPath!);
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      socket.destroy();
+      resolve();
+    };
 
-  const finish = () => {
-    if (done) return;
-    done = true;
-    socket.destroy();
-    resolve();
-  };
-
-  socket.on("error", finish);
-  socket.on("connect", () => socket.write(`${JSON.stringify(request)}\n`));
-  socket.on("data", finish);
-  socket.on("end", finish);
-  const timeout = setTimeout(finish, 500);
-  timeout.unref?.();
-
-  return promise;
+    const socket = createConnection(socketPath!);
+    socket.on("error", finish);
+    socket.on("connect", () => socket.write(`${JSON.stringify(request)}\n`));
+    socket.on("data", finish);
+    socket.on("end", finish);
+    const timeout = setTimeout(finish, 500);
+    timeout.unref?.();
+  });
 }
 
 type AgentState = "working" | "blocked" | "idle";

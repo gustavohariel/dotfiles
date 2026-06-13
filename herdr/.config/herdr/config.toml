@@ -31,6 +31,30 @@ previous_agent = "prefix+alt+p"
 next_agent = "prefix+alt+n"
 focus_agent = "prefix+alt+1..9"
 
+[[keys.command]]
+key = "prefix+alt+g"
+type = "pane"
+command = "lazygit"
+description = "lazygit"
+
+[[keys.command]]
+key = "prefix+alt+t"
+type = "pane"
+command = "btop"
+description = "btop"
+
+[[keys.command]]
+key = "prefix+alt+b"
+type = "shell"
+command = "/home/realgh/.config/herdr/scripts/herdr-bun-start"
+description = "bun start in new tab"
+
+[[keys.command]]
+key = "prefix+alt+e"
+type = "pane"
+command = "nvim"
+description = "nvim"
+
 [ui.sound]
 enabled = true
 

@@ -29,7 +29,7 @@ stow -R -t ~ <package>       # restow (refresh)
 | `local-bin/` | `~/.local/bin/` | `display-desk`, `display-tv` (niri output switching) |
 | `screencast-nvidia/` | `~/.config/xdg-desktop-portal/`, `~/.config/systemd/user/xdg-desktop-portal-gnome.service.d/` | NVIDIA+Wayland screencast workaround (wlr portal + `GSK_RENDERER=gl`) |
 | `omp/` | `~/.omp/agent/`, `~/.omp/agent/skills/`, `~/.omp/plugins/package*.json` | Oh My Pi config, OMP skills, plus plugin manifests; run `npm install` in `~/.omp/plugins` after stowing |
-| `herdr/` | `~/.config/herdr/config.toml` | theme, keys, sidebar settings |
+| `herdr/` | `~/.config/herdr/config.toml`, `~/.config/herdr/scripts/` | theme, keys, sidebar settings, custom command keybindings, `herdr-bun-start` script |
 | `lazygit/` | `~/.config/lazygit/config.yml` | titanium theme, pager, keybindings |
 
 **Script-installed packages** — touch `/etc` too, so stow is the wrong tool. Deploy with `sudo sh <pkg>/install.sh`. Idempotent.
