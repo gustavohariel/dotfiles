@@ -17,7 +17,7 @@ settings_show_advanced = true
 
 [theme]
 builtin = "Tokyo-Night"
-custom_palette = "Poimandres"
+custom_palette = "Titanium"
 source = "custom"
 
     [theme.templates]

@@ -1,0 +1,44 @@
+# Lazygit config — titanium theme (OMP default dark palette)
+# Electric blue accent on near-black hardware-inspired background
+gui:
+  theme:
+    lightTheme: false
+    activeBorderColor:
+      - "#00b4ff"
+      - bold
+    inactiveBorderColor:
+      - "#9ca3b0"
+    searchingActiveBorderColor:
+      - "#00ff88"
+      - bold
+    optionsTextColor:
+      - "#00b4ff"
+    selectedLineBgColor:
+      - "#1f252d"
+    selectedRangeBgColor:
+      - "#0082b3"
+    cherryPickedCommitBgColor:
+      - "#0082b3"
+    cherryPickedCommitFgColor:
+      - "#00b4ff"
+    unstagedChangesColor:
+      - "#ff4757"
+    stagingColor:
+      - "#00ff88"
+    mainBranchesColor:
+      - "#d4c090"
+  nerdFontsVersion: "3"
+  showIcons: true
+  showFileTree: true
+  showBottomLine: false
+  showCommandLog: false
+  status:
+    recentRepos: 10
+  authorColors:
+    "*": "#9ca3b0"
+git:
+  pagers:
+    - colorArg: always
+      pager: delta
+os:
+  editPreset: nvim
