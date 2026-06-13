@@ -36,9 +36,13 @@ gui:
     recentRepos: 10
   authorColors:
     "*": "#9ca3b0"
-git:
-  pagers:
-    - colorArg: always
-      pager: delta
+# No external pager configured — delta isn't installed on this machine, and
+# lazygit runs git commands in an internal PTY with TERM=dumb (PR #3420) which
+# breaks most external pagers unless configured with --paging=never.
+# Remove this block if you install delta later and add: pager: delta --paging=never
+#git:
+#  pagers:
+#    - colorArg: always
+#      pager: delta
 os:
   editPreset: nvim

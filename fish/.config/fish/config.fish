@@ -26,6 +26,12 @@ end
 # uses XWayland instead of crashing on Niri sessions.
 set -gx QT_QPA_PLATFORM xcb
 
+# Override TERM for herdr remote-SSH sessions (lazygit right-panel preview
+# breaks with TERM=dumb since termbox disables color/rendering in dumb mode).
+if test "$TERM" = dumb
+    set -gx TERM xterm-256color
+end
+
 # Shell integrations
 if type -q fzf
     fzf --fish | source
