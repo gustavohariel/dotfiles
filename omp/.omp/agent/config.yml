@@ -1,4 +1,3 @@
-lastChangelogVersion: 15.10.9
 providers: 
   webSearch: auto
 symbolPreset: unicode
@@ -20,3 +19,8 @@ hideThinkingBlock: true
 defaultThinkingLevel: auto
 task: 
   eager: true
+dev: 
+  autoqa: 
+    consent: granted
+display: 
+  showTokenUsage: true
