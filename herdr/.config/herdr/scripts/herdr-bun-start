@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# target: ~/.config/herdr/scripts/herdr-bun-start  (symlinked from dotfiles)
+#
+# Custom command for herdr keybinding: open a new tab, cd to the current
+# pane's work directory, and run `bun start`.
+set -euo pipefail
+
+DIR="${HERDR_ACTIVE_PANE_CWD:-$PWD}"
+
+# Create a focused tab and grab its root pane ID from the JSON response
+RESP=$(herdr tab create --focus --label "Dev")
+PANE_ID=$(echo "$RESP" | python3 -c \
+    'import sys,json; print(json.load(sys.stdin)["result"]["root_pane"]["pane_id"])')
+
+# Run bun start in the new tab's pane
+herdr pane run "$PANE_ID" "cd '$DIR' && bun start"
