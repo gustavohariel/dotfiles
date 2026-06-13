@@ -1,4 +1,5 @@
 source /usr/share/cachyos-fish-config/cachyos-config.fish
+source (dirname (realpath (status --current-filename)))/conf.d/titanium-theme.fish
 
 # overwrite greeting (disables fastfetch from cachyos-config.fish)
 function fish_greeting

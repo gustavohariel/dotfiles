@@ -1,21 +1,27 @@
 onboarding = false
 
 [theme]
-name = "terminal"
+name = "catppuccin"
 
 [theme.custom]
-# Titanium palette — inspired by OMP default dark theme
+# Titanium palette — Catppuccin only supplies sane UI token wiring; every
+# visible color below is pinned back to the titanium palette.
 panel_bg = "#151820"
 surface0 = "#151820"
-surface1 = "#1f252d"
-overlay0 = "#2a3038"
-overlay1 = "#2a3038"
-subtext0 = "#9ca3b0"
+surface1 = "#27303a"
+surface_dim = "#1f252d"
+overlay0 = "#7f8a9b"
+overlay1 = "#9aa6b8"
+text = "#d7dde7"
+subtext0 = "#c6ced8"
 accent = "#00b4ff"
+mauve = "#00b4ff"
 green = "#00ff88"
-blue = "#0082b3"
+blue = "#00b4ff"
+teal = "#00d7d7"
 red = "#ff4757"
 yellow = "#ffb347"
+peach = "#ffb347"
 [keys]
 remove_worktree = "prefix+alt+d"
 previous_workspace = "prefix+shift+left"
