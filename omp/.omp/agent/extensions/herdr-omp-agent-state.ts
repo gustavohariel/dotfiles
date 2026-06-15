@@ -195,10 +195,12 @@ export default function (pi) {
     if (failureBlocked) {
       return { state: "blocked" as const, message: failureMessage };
     }
-    if (agentActive || retryHoldActive) {
-      return { state: "working" as const, message: undefined };
-    }
-    return { state: "idle" as const, message: undefined };
+    // Keep the agent visible while the session is alive. Never transition to
+    // idle — Herd may drop the pane from its agent list on idle, and subsequent
+    // working reports on a dropped pane are silently ignored (sendRequest never
+    // surfaces the failure). releaseAgent on session_shutdown is the only
+    // cleanup.
+    return { state: "working" as const, message: undefined };
   }
 
   function publishState() {
@@ -211,14 +213,12 @@ export default function (pi) {
     queueState(next.state, next.message);
   }
 
-  function scheduleIdle() {
+  function afterAgentEnd() {
     clearPendingTimers();
     clearFailureState();
-    idleTimer = setTimeout(() => {
-      idleTimer = undefined;
-      publishState();
-    }, idleDebounceMs);
-    idleTimer.unref?.();
+    // Don't schedule idle — keep working so Herd keeps the agent visible.
+    // publishState will be a no-op (state unchanged) until agent_start or
+    // blocked events cause a transition.
   }
 
   function holdForRetry(message: string) {
@@ -268,7 +268,7 @@ export default function (pi) {
     if (!agentActive) {
       // OMP can emit duplicate/late end events while auto-retry is already
       // holding the pane in Working. Do not let an unqualified duplicate end
-      // cancel the retry hold and publish a false Idle.
+      // cancel the retry hold.
       return;
     }
 
@@ -280,7 +280,7 @@ export default function (pi) {
       return;
     }
 
-    scheduleIdle();
+    afterAgentEnd();
   });
 
   pi.on("session_shutdown", async () => {
