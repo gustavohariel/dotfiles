@@ -5,7 +5,7 @@ theme:
   dark: titanium
 setupVersion: 1
 modelRoles: 
-  default: openai-codex/gpt-5.5
+  default: openai-codex/gpt-5.5:medium
 memory: 
   backend: local
 readLineNumbers: true
@@ -18,7 +18,7 @@ github:
 hideThinkingBlock: true
 defaultThinkingLevel: auto
 task: 
-  eager: true
+  eager: always
 dev: 
   autoqa: 
     consent: granted

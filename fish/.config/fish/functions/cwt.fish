@@ -4,6 +4,25 @@ function cwt --description 'Bare cwt: cd to the worktree of claude running in a 
         set mode delete
         set -e argv[1]
     end
+    function __cwt_list_worktrees --no-scope-shadowing
+        set -l root (git rev-parse --show-toplevel 2>/dev/null)
+        if test -n "$root"
+            git -C $root worktree list --porcelain | awk '
+                /^worktree / { path = substr($0, 10) }
+                /^branch /   { br = substr($0, 19); printf "%-40s %s\n", br, path; br="" }
+                /^detached/  { printf "%-40s %s\n", "(detached)", path }
+            '
+        end
+
+        for dir in $HOME/.worktrees/*/*
+            test -d "$dir"; or continue
+            git -C "$dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; or continue
+            set -l branch (git -C "$dir" branch --show-current 2>/dev/null)
+            test -n "$branch"; or set branch "(detached)"
+            printf "%-40s %s\n" "$branch" "$dir"
+        end | awk '!seen[$0]++'
+    end
+
 
     if test "$mode" = delete
         set -l root (git rev-parse --show-toplevel 2>/dev/null)
@@ -34,11 +53,7 @@ function cwt --description 'Bare cwt: cd to the worktree of claude running in a 
             end
         end
 
-        set -l list (git -C $root worktree list --porcelain | awk '
-            /^worktree / { path = substr($0, 10) }
-            /^branch /   { br = substr($0, 19); printf "%-40s %s\n", br, path; br="" }
-            /^detached/  { printf "%-40s %s\n", "(detached)", path }
-        ')
+        set -l list (__cwt_list_worktrees)
         set list (printf '%s\n' $list | awk -v main="$main_wt" 'NF && $NF != main')
         if test (count $list) -eq 0
             echo "no removable worktrees" >&2
@@ -64,10 +79,12 @@ function cwt --description 'Bare cwt: cd to the worktree of claude running in a 
             cd $main_wt
             or return 1
         end
-        git -C $main_wt worktree remove $dir
+        set -l owner_main (git -C $dir worktree list --porcelain | awk '/^worktree / { print substr($0, 10); exit }')
+        test -n "$owner_main"; or set owner_main $main_wt
+        git -C $owner_main worktree remove $dir
         or return 1
         if test -n "$branch"; and test "$branch" != "(detached)"
-            git -C $main_wt branch -D $branch 2>/dev/null
+            git -C $owner_main branch -D $branch 2>/dev/null
             or echo "note: could not delete branch $branch" >&2
         end
         return 0
@@ -112,16 +129,11 @@ function cwt --description 'Bare cwt: cd to the worktree of claude running in a 
         end
     end
 
-    set -l root (git rev-parse --show-toplevel 2>/dev/null)
-    if test -z "$root"
-        echo "no claude found in this seance workspace, and not in a git repo for fzf fallback" >&2
+    set -l list (__cwt_list_worktrees)
+    if test (count $list) -eq 0
+        echo "no claude found in this seance workspace, and no worktrees found" >&2
         return 1
     end
-    set -l list (git -C $root worktree list --porcelain | awk '
-        /^worktree / { path = substr($0, 10) }
-        /^branch /   { br = substr($0, 19); printf "%-40s %s\n", br, path; br="" }
-        /^detached/  { printf "%-40s %s\n", "(detached)", path }
-    ')
     set -l selection (printf '%s\n' $list | fzf --height=40% --reverse --header=worktrees --prompt="cwt> ")
     if test -z "$selection"
         return 1
