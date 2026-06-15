@@ -16,26 +16,46 @@ function enabled() {
   return HERDR_ENV === "1" && !!socketPath && !!paneId;
 }
 
-function sendRequest(request: unknown): Promise<void> {
+function sendRequest(request: unknown, retries = 1): Promise<void> {
   if (!enabled()) {
     return Promise.resolve();
   }
 
   const { promise, resolve } = Promise.withResolvers<void>();
   let done = false;
-  const finish = () => {
+  let socket: ReturnType<typeof createConnection> | undefined;
+
+  const tryConnect = (remaining: number) => {
     if (done) return;
-    done = true;
-    socket.destroy();
-    resolve();
+
+    const finish = () => {
+      if (done) return;
+      done = true;
+      if (socket) socket.destroy();
+      resolve();
+    };
+
+    socket = createConnection(socketPath!);
+    socket.on("error", () => {
+      if (remaining > 0) {
+        socket?.destroy();
+        setTimeout(() => tryConnect(remaining - 1), 100);
+        return;
+      }
+      finish();
+    });
+    socket.on("connect", () => socket!.write(`${JSON.stringify(request)}\n`));
+    socket.on("data", finish);
+    socket.on("end", finish);
   };
 
-  const socket = createConnection(socketPath!);
-  socket.on("error", finish);
-  socket.on("connect", () => socket.write(`${JSON.stringify(request)}\n`));
-  socket.on("data", finish);
-  socket.on("end", finish);
-  const timeout = setTimeout(finish, 500);
+  tryConnect(retries);
+
+  const timeout = setTimeout(() => {
+    done = true;
+    socket?.destroy();
+    resolve();
+  }, 500);
   timeout.unref?.();
 
   return promise;
@@ -178,6 +198,7 @@ export default function (pi) {
   let lastMessage: string | undefined;
   let idleTimer: ReturnType<typeof setTimeout> | undefined;
   let retryTimer: ReturnType<typeof setTimeout> | undefined;
+  let heartbeatTimer: ReturnType<typeof setInterval> | undefined;
 
   function clearTimer(timer: ReturnType<typeof setTimeout> | undefined) {
     clearTimeout(timer);
@@ -267,6 +288,12 @@ export default function (pi) {
 
   pi.on("session_start", () => {
     publishState();
+    // Heartbeat every 30s so the agent stays visible even if an occasional
+    // state report is silently dropped by sendRequest.
+    const HEARTBEAT_MS = 30_000;
+    clearTimer(heartbeatTimer);
+    heartbeatTimer = setInterval(() => publishState(true), HEARTBEAT_MS);
+    heartbeatTimer.unref?.();
   });
 
   pi.on("agent_start", () => {
@@ -300,6 +327,7 @@ export default function (pi) {
   });
 
   pi.on("session_shutdown", async () => {
+    clearTimer(heartbeatTimer);
     clearPendingTimers();
     await releaseAgent();
   });
