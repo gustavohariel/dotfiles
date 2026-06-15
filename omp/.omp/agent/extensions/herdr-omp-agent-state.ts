@@ -224,9 +224,9 @@ export default function (pi) {
     if (failureBlocked) {
       return { state: "blocked" as const, message: failureMessage };
     }
-    if (!agentActive) {
-      return { state: "idle" as const, message: undefined };
-    }
+    // Stay on "working" for the entire session. Never transition to idle —
+    // Herdr can drop the pane from its agent list when idle, and the
+    // heartbeat (every 30s) force-publishes working to keep it visible.
     return { state: "working" as const, message: undefined };
   }
 
@@ -251,7 +251,8 @@ export default function (pi) {
 
   function afterAgentEnd() {
     clearFailureState();
-    scheduleIdle();
+    // State stays at "working" — no idle transition. The heartbeat
+    // (every 30s) force-publishes working to keep the agent visible.
   }
 
   function holdForRetry(message: string) {
