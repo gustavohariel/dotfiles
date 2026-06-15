@@ -21,23 +21,24 @@ function sendRequest(request: unknown): Promise<void> {
     return Promise.resolve();
   }
 
-  return new Promise((resolve) => {
-    let done = false;
-    const finish = () => {
-      if (done) return;
-      done = true;
-      socket.destroy();
-      resolve();
-    };
+  const { promise, resolve } = Promise.withResolvers<void>();
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    socket.destroy();
+    resolve();
+  };
 
-    const socket = createConnection(socketPath!);
-    socket.on("error", finish);
-    socket.on("connect", () => socket.write(`${JSON.stringify(request)}\n`));
-    socket.on("data", finish);
-    socket.on("end", finish);
-    const timeout = setTimeout(finish, 500);
-    timeout.unref?.();
-  });
+  const socket = createConnection(socketPath!);
+  socket.on("error", finish);
+  socket.on("connect", () => socket.write(`${JSON.stringify(request)}\n`));
+  socket.on("data", finish);
+  socket.on("end", finish);
+  const timeout = setTimeout(finish, 500);
+  timeout.unref?.();
+
+  return promise;
 }
 
 type AgentState = "working" | "blocked" | "idle";
@@ -116,17 +117,26 @@ async function drainStateQueue(): Promise<void> {
   }
 }
 
-function lastAssistantMessage(messages: unknown[]): any | undefined {
+interface AssistantMessage {
+  role: string;
+  stopReason?: string;
+  errorMessage?: string;
+}
+
+function lastAssistantMessage(messages: unknown[]): AssistantMessage | undefined {
   for (let i = messages.length - 1; i >= 0; i -= 1) {
-    const message = messages[i] as any;
-    if (message?.role === "assistant") {
-      return message;
+    const candidate = messages[i];
+    if (candidate && typeof candidate === "object" && "role" in candidate) {
+      const msg = candidate as Record<string, unknown>;
+      if (msg.role === "assistant") {
+        return candidate as AssistantMessage;
+      }
     }
   }
   return undefined;
 }
 
-function retryableErrorMessage(event: any): string | undefined {
+function retryableErrorMessage(event: { messages?: unknown[] }): string | undefined {
   const messages = Array.isArray(event?.messages) ? event.messages : [];
   const assistant = lastAssistantMessage(messages);
   if (assistant?.stopReason !== "error") {
@@ -170,9 +180,7 @@ export default function (pi) {
   let retryTimer: ReturnType<typeof setTimeout> | undefined;
 
   function clearTimer(timer: ReturnType<typeof setTimeout> | undefined) {
-    if (timer) {
-      clearTimeout(timer);
-    }
+    clearTimeout(timer);
   }
 
   function clearPendingTimers() {
@@ -195,11 +203,9 @@ export default function (pi) {
     if (failureBlocked) {
       return { state: "blocked" as const, message: failureMessage };
     }
-    // Keep the agent visible while the session is alive. Never transition to
-    // idle — Herd may drop the pane from its agent list on idle, and subsequent
-    // working reports on a dropped pane are silently ignored (sendRequest never
-    // surfaces the failure). releaseAgent on session_shutdown is the only
-    // cleanup.
+    if (!agentActive) {
+      return { state: "idle" as const, message: undefined };
+    }
     return { state: "working" as const, message: undefined };
   }
 
@@ -213,12 +219,18 @@ export default function (pi) {
     queueState(next.state, next.message);
   }
 
+  function scheduleIdle() {
+    clearTimer(idleTimer);
+    idleTimer = setTimeout(() => {
+      idleTimer = undefined;
+      publishState();
+    }, idleDebounceMs);
+    idleTimer.unref?.();
+  }
+
   function afterAgentEnd() {
-    clearPendingTimers();
     clearFailureState();
-    // Don't schedule idle — keep working so Herd keeps the agent visible.
-    // publishState will be a no-op (state unchanged) until agent_start or
-    // blocked events cause a transition.
+    scheduleIdle();
   }
 
   function holdForRetry(message: string) {
@@ -261,9 +273,10 @@ export default function (pi) {
     clearPendingTimers();
     clearFailureState();
     agentActive = true;
-    // Force-publish on every agent_start — sendRequest silently drops failures, so
-    // the initial session_start report may not have reached Herdr. This gives a
-    // second chance once the socket is definitely ready.
+    // Force-publish on every agent_start — sendRequest silently drops
+    // failures, so the initial session_start report may not have reached
+    // Herdr, and an idle report between iterations might cause Herdr to drop
+    // the pane. Force-publishing re-registers the agent unconditionally.
     publishState(true);
   });
 
