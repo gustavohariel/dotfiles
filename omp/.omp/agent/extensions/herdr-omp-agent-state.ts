@@ -203,9 +203,9 @@ export default function (pi) {
     return { state: "working" as const, message: undefined };
   }
 
-  function publishState() {
+  function publishState(force?: boolean) {
     const next = desiredState();
-    if (next.state === lastState && next.message === lastMessage) {
+    if (!force && next.state === lastState && next.message === lastMessage) {
       return;
     }
     lastState = next.state;
@@ -261,7 +261,10 @@ export default function (pi) {
     clearPendingTimers();
     clearFailureState();
     agentActive = true;
-    publishState();
+    // Force-publish on every agent_start — sendRequest silently drops failures, so
+    // the initial session_start report may not have reached Herdr. This gives a
+    // second chance once the socket is definitely ready.
+    publishState(true);
   });
 
   pi.on("agent_end", (event) => {
