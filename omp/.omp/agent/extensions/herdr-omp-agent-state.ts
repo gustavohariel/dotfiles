@@ -16,49 +16,28 @@ function enabled() {
   return HERDR_ENV === "1" && !!socketPath && !!paneId;
 }
 
-function sendRequest(request: unknown, retries = 1): Promise<void> {
+function sendRequest(request: unknown): Promise<void> {
   if (!enabled()) {
     return Promise.resolve();
   }
 
-  const { promise, resolve } = Promise.withResolvers<void>();
-  let done = false;
-  let socket: ReturnType<typeof createConnection> | undefined;
-
-  const tryConnect = (remaining: number) => {
-    if (done) return;
-
+  return new Promise((resolve) => {
+    let done = false;
     const finish = () => {
       if (done) return;
       done = true;
-      if (socket) socket.destroy();
+      socket.destroy();
       resolve();
     };
 
-    socket = createConnection(socketPath!);
-    socket.on("error", () => {
-      if (remaining > 0) {
-        socket?.destroy();
-        setTimeout(() => tryConnect(remaining - 1), 100);
-        return;
-      }
-      finish();
-    });
-    socket.on("connect", () => socket!.write(`${JSON.stringify(request)}\n`));
+    const socket = createConnection(socketPath!);
+    socket.on("error", finish);
+    socket.on("connect", () => socket.write(`${JSON.stringify(request)}\n`));
     socket.on("data", finish);
     socket.on("end", finish);
-  };
-
-  tryConnect(retries);
-
-  const timeout = setTimeout(() => {
-    done = true;
-    socket?.destroy();
-    resolve();
-  }, 500);
-  timeout.unref?.();
-
-  return promise;
+    const timeout = setTimeout(finish, 500);
+    timeout.unref?.();
+  });
 }
 
 type AgentState = "working" | "blocked" | "idle";
@@ -137,26 +116,17 @@ async function drainStateQueue(): Promise<void> {
   }
 }
 
-interface AssistantMessage {
-  role: string;
-  stopReason?: string;
-  errorMessage?: string;
-}
-
-function lastAssistantMessage(messages: unknown[]): AssistantMessage | undefined {
+function lastAssistantMessage(messages: unknown[]): any | undefined {
   for (let i = messages.length - 1; i >= 0; i -= 1) {
-    const candidate = messages[i];
-    if (candidate && typeof candidate === "object" && "role" in candidate) {
-      const msg = candidate as Record<string, unknown>;
-      if (msg.role === "assistant") {
-        return candidate as AssistantMessage;
-      }
+    const message = messages[i] as any;
+    if (message?.role === "assistant") {
+      return message;
     }
   }
   return undefined;
 }
 
-function retryableErrorMessage(event: { messages?: unknown[] }): string | undefined {
+function retryableErrorMessage(event: any): string | undefined {
   const messages = Array.isArray(event?.messages) ? event.messages : [];
   const assistant = lastAssistantMessage(messages);
   if (assistant?.stopReason !== "error") {
@@ -198,10 +168,11 @@ export default function (pi) {
   let lastMessage: string | undefined;
   let idleTimer: ReturnType<typeof setTimeout> | undefined;
   let retryTimer: ReturnType<typeof setTimeout> | undefined;
-  let heartbeatTimer: ReturnType<typeof setInterval> | undefined;
 
   function clearTimer(timer: ReturnType<typeof setTimeout> | undefined) {
-    clearTimeout(timer);
+    if (timer) {
+      clearTimeout(timer);
+    }
   }
 
   function clearPendingTimers() {
@@ -224,15 +195,15 @@ export default function (pi) {
     if (failureBlocked) {
       return { state: "blocked" as const, message: failureMessage };
     }
-    // Stay on "working" for the entire session. Never transition to idle —
-    // Herdr can drop the pane from its agent list when idle, and the
-    // heartbeat (every 30s) force-publishes working to keep it visible.
-    return { state: "working" as const, message: undefined };
+    if (agentActive || retryHoldActive) {
+      return { state: "working" as const, message: undefined };
+    }
+    return { state: "idle" as const, message: undefined };
   }
 
-  function publishState(force?: boolean) {
+  function publishState() {
     const next = desiredState();
-    if (!force && next.state === lastState && next.message === lastMessage) {
+    if (next.state === lastState && next.message === lastMessage) {
       return;
     }
     lastState = next.state;
@@ -241,18 +212,13 @@ export default function (pi) {
   }
 
   function scheduleIdle() {
-    clearTimer(idleTimer);
+    clearPendingTimers();
+    clearFailureState();
     idleTimer = setTimeout(() => {
       idleTimer = undefined;
       publishState();
     }, idleDebounceMs);
     idleTimer.unref?.();
-  }
-
-  function afterAgentEnd() {
-    clearFailureState();
-    // State stays at "working" — no idle transition. The heartbeat
-    // (every 30s) force-publishes working to keep the agent visible.
   }
 
   function holdForRetry(message: string) {
@@ -289,30 +255,20 @@ export default function (pi) {
 
   pi.on("session_start", () => {
     publishState();
-    // Heartbeat every 30s so the agent stays visible even if an occasional
-    // state report is silently dropped by sendRequest.
-    const HEARTBEAT_MS = 30_000;
-    clearTimer(heartbeatTimer);
-    heartbeatTimer = setInterval(() => publishState(true), HEARTBEAT_MS);
-    heartbeatTimer.unref?.();
   });
 
   pi.on("agent_start", () => {
     clearPendingTimers();
     clearFailureState();
     agentActive = true;
-    // Force-publish on every agent_start — sendRequest silently drops
-    // failures, so the initial session_start report may not have reached
-    // Herdr, and an idle report between iterations might cause Herdr to drop
-    // the pane. Force-publishing re-registers the agent unconditionally.
-    publishState(true);
+    publishState();
   });
 
   pi.on("agent_end", (event) => {
     if (!agentActive) {
       // OMP can emit duplicate/late end events while auto-retry is already
       // holding the pane in Working. Do not let an unqualified duplicate end
-      // cancel the retry hold.
+      // cancel the retry hold and publish a false Idle.
       return;
     }
 
@@ -324,11 +280,10 @@ export default function (pi) {
       return;
     }
 
-    afterAgentEnd();
+    scheduleIdle();
   });
 
   pi.on("session_shutdown", async () => {
-    clearTimer(heartbeatTimer);
     clearPendingTimers();
     await releaseAgent();
   });
