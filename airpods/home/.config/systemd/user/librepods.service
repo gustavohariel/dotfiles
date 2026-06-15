@@ -1,0 +1,18 @@
+# target: ~/.config/systemd/user/librepods.service
+# librepods daemon — Bluetooth control, stem-press routing, ANC/Transparency.
+# Tied to graphical-session.target so the Wayland display is available.
+# %h = $HOME. Use --hide to suppress the main window on start.
+
+[Unit]
+Description=librepods Bluetooth daemon
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/librepods --hide
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical-session.target

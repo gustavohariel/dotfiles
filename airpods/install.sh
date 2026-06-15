@@ -67,6 +67,10 @@ ln -snf "$here/home/.config/systemd/user/airpods-watch.service" \
         "$user_home/.config/systemd/user/airpods-watch.service"
 chown -h "$SUDO_USER:$SUDO_USER" "$user_home/.config/systemd/user/airpods-watch.service"
 
+ln -snf "$here/home/.config/systemd/user/librepods.service" \
+        "$user_home/.config/systemd/user/librepods.service"
+chown -h "$SUDO_USER:$SUDO_USER" "$user_home/.config/systemd/user/librepods.service"
+
 ln -snf "$here/home/.local/bin/airpods-watch" \
         "$user_home/.local/bin/airpods-watch"
 chown -h "$SUDO_USER:$SUDO_USER" "$user_home/.local/bin/airpods-watch"
@@ -82,6 +86,12 @@ fi
 # 6. Restart bluetooth so main.conf changes take effect.
 systemctl restart bluetooth
 
+# 7. Reload systemd user units and enable both services to start with the session.
+#    XDG_RUNTIME_DIR is needed because sudo strips it from the environment.
+uid=$(id -u "$SUDO_USER")
+sudo -u "$SUDO_USER" XDG_RUNTIME_DIR=/run/user/"$uid" systemctl --user daemon-reload
+sudo -u "$SUDO_USER" XDG_RUNTIME_DIR=/run/user/"$uid" systemctl --user enable --now librepods.service airpods-watch.service
+
 cat <<EOF
 
 ✓ System bits installed (root scope).
@@ -92,13 +102,11 @@ What just happened:
   - ~/.local/bin/airpods-watch symlinked (script lives in staging; edit there).
   - ~/.config/wireplumber/wireplumber.conf.d/52-bluez-avrcp.conf symlinked.
   - ~/.config/systemd/user/airpods-watch.service symlinked.
+  - ~/.config/systemd/user/librepods.service symlinked and enabled (auto-starts with session).
   - Legacy /usr/local/bin/airpods-watch removed if present.
   - bluetooth.service restarted.
 
-Still to do (as your user, NOT root) — same convention as bluetooth-fix:
-  systemctl --user daemon-reload
-  systemctl --user enable --now airpods-watch.service
-  systemctl --user restart airpods-watch.service     # if already enabled
+Still to do (as your user, NOT root):
   systemctl --user restart wireplumber
 
 Verify after that:
@@ -107,9 +115,9 @@ Verify after that:
   bluetoothctl info 30:7A:D2:8F:E8:1A
   pactl list cards | grep -A 5 bluez_card
 
-Then launch librepods (Qt UI) once to grant access, after which the daemon
-takes over stem-press routing and ANC/Transparency control. Ear-detection
-auto-pause needs MPRIS — start music in any player to test.
+The librepods service starts automatically with your graphical session,
+running as a system tray daemon for stem-press routing and ANC/Transparency
+control. Ear-detection auto-pause needs MPRIS — start music in any player to test.
 
 iOS gotcha: open Settings → Bluetooth → AirPods (i) → "Connect to This iPhone"
 and set it to "When Last Connected to This iPhone" so the iPhone doesn't
