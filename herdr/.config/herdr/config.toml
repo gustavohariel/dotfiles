@@ -32,6 +32,12 @@ next_agent = "prefix+alt+n"
 focus_agent = "prefix+alt+1..9"
 
 [[keys.command]]
+key = "prefix+space"
+type = "plugin_action"
+command = "alonz.command-palette.open"
+description = "command palette"
+
+[[keys.command]]
 key = "prefix+alt+g"
 type = "pane"
 command = "lazygit"
