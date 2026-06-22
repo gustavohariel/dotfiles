@@ -5,7 +5,7 @@ theme:
   dark: titanium
 setupVersion: 1
 modelRoles: 
-  default: openai-codex/gpt-5.5:medium
+  default: openai-codex/gpt-5.5:high
 memory: 
   backend: local
 readLineNumbers: true

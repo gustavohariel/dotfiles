@@ -68,3 +68,10 @@ prompt_new_tab_name = false
 
 [worktrees]
 directory = "~/.worktrees"
+
+[experimental]
+pane_history = true
+switch_ascii_input_source_in_prefix = false
+
+[update]
+channel = "stable"
