@@ -1,0 +1,85 @@
+[
+  {
+    "plugin_id": "setup-bootstrap",
+    "name": "Setup Bootstrap",
+    "version": "0.1.2",
+    "min_herdr_version": "0.7.0",
+    "description": "Bootstrap new Herdr worktree checkouts from worktree_init.toml.",
+    "manifest_path": "/home/realgh/.config/herdr/plugins/github/setup-bootstrap-26d28e54b799/herdr-plugin.toml",
+    "plugin_root": "/home/realgh/.config/herdr/plugins/github/setup-bootstrap-26d28e54b799",
+    "enabled": true,
+    "platforms": [
+      "linux",
+      "macos"
+    ],
+    "events": [
+      {
+        "on": "workspace.created",
+        "command": [
+          "./bootstrap.sh"
+        ]
+      },
+      {
+        "on": "workspace.focused",
+        "command": [
+          "./bootstrap.sh"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "github",
+      "owner": "shizlie",
+      "repo": "herdr-setup-bootstrap",
+      "resolved_commit": "5e2a5bc1e2f3b153a0844908e0279a6758408093",
+      "managed_path": "/home/realgh/.config/herdr/plugins/github/setup-bootstrap-26d28e54b799",
+      "installed_unix_ms": 1782132552348
+    }
+  },
+  {
+    "plugin_id": "alonz.command-palette",
+    "name": "Command Palette",
+    "version": "0.1.0",
+    "min_herdr_version": "0.7.0",
+    "description": "Fuzzy-pick open Herdr workspaces and configured project directories. Focus existing workspaces or create one for the selected directory.",
+    "manifest_path": "/home/realgh/.config/herdr/plugins/github/alonz.command-palette-688bfcb61f6c/herdr-plugin.toml",
+    "plugin_root": "/home/realgh/.config/herdr/plugins/github/alonz.command-palette-688bfcb61f6c",
+    "enabled": true,
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "actions": [
+      {
+        "id": "open",
+        "title": "Open command palette",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "node",
+          "src/open.js"
+        ]
+      }
+    ],
+    "panes": [
+      {
+        "id": "palette",
+        "title": "Command Palette",
+        "placement": "overlay",
+        "command": [
+          "node",
+          "src/palette.js"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "github",
+      "owner": "alon-z",
+      "repo": "herdr-command-palette",
+      "resolved_commit": "230a7b32f4ae2bed55c8f3c7b3b6b5810af26f79",
+      "managed_path": "/home/realgh/.config/herdr/plugins/github/alonz.command-palette-688bfcb61f6c",
+      "installed_unix_ms": 1782131754468
+    }
+  }
+]
