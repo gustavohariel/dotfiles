@@ -2,7 +2,8 @@
   "name": "omp-plugins",
   "private": true,
   "dependencies": {
-    "pi-mono-figma": "^0.2.2"
+    "pi-mono-figma": "^0.2.2",
+    "ponytail": "https://github.com/DietrichGebert/ponytail"
   },
   "devDependencies": {
     "@earendil-works/pi-tui": "^0.79.0"
