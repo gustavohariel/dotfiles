@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/tui.json",
-  "theme": "poimandres-transparent",
+  "theme": "titanium",
   "keybinds": {
     "variant_cycle": "ctrl+t"
   }
