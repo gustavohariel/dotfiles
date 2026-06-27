@@ -6,6 +6,7 @@ theme:
 setupVersion: 1
 modelRoles: 
   default: openai-codex/gpt-5.5:high
+  smol: openai-codex/gpt-5.3-codex-spark
 memory: 
   backend: local
 readLineNumbers: true
@@ -15,12 +16,16 @@ inspect_image:
   enabled: true
 github: 
   enabled: true
-hideThinkingBlock: true
-defaultThinkingLevel: auto
+hideThinkingBlock: false
+defaultThinkingLevel: high
 task: 
-  eager: always
+  eager: default
 dev: 
   autoqa: 
     consent: granted
 display: 
-  showTokenUsage: true
+  showTokenUsage: false
+codexResets: 
+  autoRedeem: "no"
+autolearn: 
+  enabled: true
