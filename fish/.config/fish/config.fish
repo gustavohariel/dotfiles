@@ -12,6 +12,10 @@ set -gx CODEX_CLI_PATH ~/.codex/packages/standalone/releases/0.136.0-x86_64-unkn
 # mise (language version manager)
 ~/.local/bin/mise activate fish | source
 
+# Editor
+set -gx EDITOR nvim
+set -gx VISUAL nvim
+
 # Aliases (ls/eza variants come from cachyos-config.fish)
 alias vim='nvim'
 alias c='clear'
