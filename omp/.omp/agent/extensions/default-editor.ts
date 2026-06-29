@@ -1,6 +1,6 @@
-// OMP runs under herdr, which does not source fish config before spawning agents.
-// Set the editor inside OMP so external-editor shortcuts work in every pane.
+// OMP external editor fallback, parked for now.
+// Fish sets EDITOR/VISUAL; restart the shell/herdr first before enabling this.
 export default function () {
-  process.env.EDITOR ??= "nvim";
-  process.env.VISUAL ??= "nvim";
+  // process.env.EDITOR ??= "nvim";
+  // process.env.VISUAL ??= "nvim";
 }
