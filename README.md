@@ -21,7 +21,7 @@ stow -R -t ~ <package>       # restow (refresh)
 | `nvim/` | `~/.config/nvim/` | lazy.nvim, custom colors, snippets |
 | `zed/` | `~/.config/zed/` | settings/keymap/tasks |
 | `cursor/` | `~/.config/Cursor/User/` (Linux) | rename `keybinds.json` → `keybindings.json` if Cursor expects it |
-| `zsh/` | `~/.zshrc` | macOS-flavored — see `CLAUDE.md` before deploying on Linux |
+| `zsh/` | `~/.zshrc` | macOS-flavored — see `AGENTS.md` before deploying on Linux |
 | `fish/` | `~/.config/fish/{config.fish,conf.d/,functions/,completions/}` | sources `~/.config/fish/private.fish` if present (gitignored) |
 | `niri/` | `~/.config/niri/` | split into `cfg/*.kdl` includes |
 | `noctalia/` | `~/.config/noctalia/` | excludes `plugins/hubstaff/` (own repo) |
