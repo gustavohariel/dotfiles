@@ -2,6 +2,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
+  "model": "claude-fable-5[1m]",
   "worktree": {
     "baseRef": "fresh"
   },
@@ -26,8 +27,11 @@
       }
     }
   },
+  "effortLevel": "xhigh",
+  "tui": "fullscreen",
   "theme": "auto",
+  "editorMode": "normal",
   "remoteControlAtStartup": true,
-  "agentPushNotifEnabled": true,
-  "inputNeededNotifEnabled": true
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true
 }
