@@ -21,6 +21,7 @@ alias vim='nvim'
 alias c='clear'
 alias oc='opencode'
 alias lg='lazygit'
+alias cc='claude'
 
 # Machine-local secrets (gitignore'd; not part of dotfiles)
 if test -f ~/.config/fish/private.fish
