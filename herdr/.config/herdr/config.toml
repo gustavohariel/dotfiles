@@ -69,10 +69,9 @@ delivery = "system"
 
 [ui]
 show_agent_labels_on_pane_borders = true
-agent_panel_scope = "all"
 prompt_new_tab_name = false
-
 agent_panel_sort = "priority"
+
 [worktrees]
 directory = "~/.worktrees"
 
