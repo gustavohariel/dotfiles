@@ -23,7 +23,7 @@ red = "#ff4757"
 yellow = "#ffb347"
 peach = "#ffb347"
 [keys]
-prefix = "ctrl+s"
+# prefix = "ctrl+b"
 remove_worktree = "prefix+alt+d"
 previous_workspace = "prefix+shift+left"
 next_workspace = "prefix+shift+right"
