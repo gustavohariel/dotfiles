@@ -12,6 +12,9 @@ set -gx CODEX_CLI_PATH ~/.codex/packages/standalone/releases/0.136.0-x86_64-unkn
 # mise (language version manager)
 ~/.local/bin/mise activate fish | source
 
+# herdr-browser plugin: path to custom Chromium binary
+set -gx HERDR_BROWSER_CHROME "$HOME/.local/share/chromium-build/chrome"
+
 # Editor
 set -gx EDITOR nvim
 set -gx VISUAL nvim

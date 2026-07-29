@@ -1,0 +1,11 @@
+{
+  "linkOpenPlacement": "split",
+  "splitDirection": "right",
+  "focusOnOpen": true,
+  "browserZoom": 1,
+  "showDiagnostics": false,
+  "captureScale": 1,
+  "captureBackend": "screenshot",
+  "screencastEveryNthFrame": 1,
+  "screencastPollMs": 250
+}

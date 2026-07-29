@@ -23,6 +23,7 @@ red = "#ff4757"
 yellow = "#ffb347"
 peach = "#ffb347"
 [keys]
+prefix = "ctrl+s"
 remove_worktree = "prefix+alt+d"
 previous_workspace = "prefix+shift+left"
 next_workspace = "prefix+shift+right"
@@ -61,6 +62,18 @@ type = "pane"
 command = "nvim"
 description = "nvim"
 
+[[keys.command]]
+key = "prefix+b"
+type = "shell"
+command = '"${HERDR_BIN_PATH}" plugin pane open --plugin official.browser --entrypoint browser --placement split --direction right --focus'
+description = "open browser in right split"
+
+[[keys.command]]
+key = "prefix+shift+b"
+type = "shell"
+command = '"${HERDR_BIN_PATH}" plugin pane open --plugin official.browser --entrypoint browser --placement overlay --focus'
+description = "open browser overlay"
+
 [ui.sound]
 enabled = true
 
@@ -77,6 +90,7 @@ directory = "~/.worktrees"
 
 [experimental]
 pane_history = true
+kitty_graphics = true
 switch_ascii_input_source_in_prefix = false
 
 [update]
