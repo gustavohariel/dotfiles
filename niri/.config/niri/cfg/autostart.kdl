@@ -5,3 +5,6 @@
     // (Restart=always + OOMScoreAdjust), not spawned here. See dotfiles/noctalia.
     spawn-sh-at-startup "sudo -n /usr/local/bin/_autologin-self"
     spawn-at-startup "gnome-keyring-daemon" "--start" "--components=secrets"
+    // Input method. Chromium/Electron ignores ~/.XCompose, so fcitx5 does the
+    // dead-key composition (' + c -> ç) and feeds it over text-input-v3.
+    spawn-at-startup "fcitx5"

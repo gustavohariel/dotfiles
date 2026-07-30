@@ -17,6 +17,10 @@ omp/.omp/plugins/cache/
 # Project skills are restored from skills-lock.json.
 .agents/skills/
 
+# fcitx5 regenerates its keymap cache and per-addon defaults at runtime; only
+# config and profile are meant to be tracked.
+fcitx5/.config/fcitx5/conf/
+
 # Noctalia hubstaff plugin lives in its own repo (~/sandbox/noctalia-hubstaff)
 # and is symlinked into ~/.config/noctalia/plugins/ at runtime — don't capture here.
 noctalia/.config/noctalia/plugins/hubstaff/
