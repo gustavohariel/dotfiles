@@ -31,6 +31,7 @@ stow -R -t ~ <package>       # restow (refresh)
 | `omp/` | `~/.omp/agent/`, `~/.omp/agent/skills/`, `~/.omp/plugins/package*.json` | Oh My Pi config, OMP skills, plus plugin manifests; run `npm install` in `~/.omp/plugins` after stowing |
 | `herdr/` | `~/.config/herdr/config.toml`, `~/.config/herdr/scripts/` | theme, keys, sidebar settings, custom command keybindings, `herdr-bun-start` script |
 | `lazygit/` | `~/.config/lazygit/config.yml` | titanium theme, pager, keybindings |
+| `t3code/` | `~/.config/t3code/themes/` | titanium theme for [T3 Code](https://t3.chat); stow only puts the file in place — install it in-app (see below) |
 
 **Script-installed packages** — touch `/etc` too, so stow is the wrong tool. Deploy with `sudo sh <pkg>/install.sh`. Idempotent.
 
@@ -43,6 +44,15 @@ stow -R -t ~ <package>       # restow (refresh)
 **Other**
 
 - `superset/themes/` — themes for [superset.sh](https://superset.sh); loaded in-app, no filesystem deploy.
+
+T3 Code stores themes in the app's `localStorage`, not on disk, so the stowed
+file is a source of truth to import from rather than something the app reads:
+
+1. Settings → Appearance → **Import theme**
+2. Drop `~/.config/t3code/themes/titanium.json` (or paste its contents)
+3. Pick **Titanium** in the theme grid
+
+Re-import after editing the file; the app does not follow the symlink at runtime.
 
 ## First-time setup on a new machine
 

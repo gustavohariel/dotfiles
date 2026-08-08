@@ -24,6 +24,7 @@ Personal dotfiles for a CachyOS Linux workstation running fish, niri, Noctalia, 
 - `herdr/.config/herdr/` — Herdr UI/keybinding config, plugin config, and helper scripts.
 - `omp/.omp/` — Oh My Pi agent config, MCP config, skills lock, and plugin manifests.
 - `local-bin/.local/bin/` — user scripts linked into `~/.local/bin`.
+- `t3code/.config/t3code/themes/` — Titanium theme file for T3 Code. Stow places it, but T3 Code keeps themes in `localStorage` (`t3code:themes:v1`), so changes only land after re-importing the file in Settings → Appearance → Import theme.
 - `bluetooth-fix/`, `airpods/`, `wol/` — root/user installers for hardware/system setup. Do not stow these.
 - `zed/`, `cursor/`, `opencode/`, `lazygit/`, `superset/` — editor/tool UI preferences and themes.
 
