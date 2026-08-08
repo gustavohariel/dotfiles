@@ -21,7 +21,7 @@ custom_palette = "Titanium"
 source = "custom"
 
     [theme.templates]
-    builtin_ids = [ "alacritty" ]
+    builtin_ids = [ "ghostty" ]
     community_ids = [ "zen-browser", "zed" ]
     enable_builtin_templates = false
 
