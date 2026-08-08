@@ -33,10 +33,16 @@
         default-column-width { fixed 632; }
     }
 
+    // T3 Code is Electron and never creates its window with `transparent`,
+    // so its surface is fully opaque and the global blur rule above has
+    // nothing to show through. Its in-app "Glass opacity" slider only fades
+    // panels over the app's own canvas, not the desktop. Compositor-side
+    // opacity is the only lever that reaches the wallpaper.
     window-rule {
         match app-id="^t3code$"
         default-column-width { proportion 0.5; }
         draw-border-with-background false
+        opacity 0.92
     }
 
     window-rule {
