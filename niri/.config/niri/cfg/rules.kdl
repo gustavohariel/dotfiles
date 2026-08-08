@@ -3,15 +3,6 @@
         clip-to-geometry true
     }
 
-    // Dual-Kawase strength knobs for every background-effect below. Leaning on
-    // blur rather than raw transparency keeps window contents (screenshots and
-    // attachments especially) close to their real colors, since compositor
-    // opacity fades the whole window texture and cannot spare a region.
-    blur {
-        passes 3
-        offset 4
-    }
-
     window-rule {
         background-effect {
             xray true
@@ -51,7 +42,7 @@
         match app-id="^t3code$"
         default-column-width { proportion 0.5; }
         draw-border-with-background false
-        opacity 0.96
+        opacity 0.92
     }
 
     window-rule {
